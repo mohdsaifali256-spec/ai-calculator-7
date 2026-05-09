@@ -38,7 +38,12 @@ export function EMICalculator() {
           <div>
             <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-widest px-1 mb-2">
               <span>Loan Amount</span>
-              <span>{formatCurrency(loan)}</span>
+              <input
+                type="number"
+                value={loan}
+                onChange={(e) => setLoan(parseInt(e.target.value) || 0)}
+                className="bg-transparent border-b border-white/10 text-right outline-none focus:border-blue-500 transition-colors w-24"
+              />
             </div>
             <input
               type="range"
@@ -47,14 +52,23 @@ export function EMICalculator() {
               step="10000"
               value={loan}
               onChange={(e) => setLoan(parseInt(e.target.value))}
-              className="w-full accent-blue-500"
+              className="w-full accent-blue-500 mb-2"
             />
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-widest px-1 mb-2">
               <span>Interest Rate (%)</span>
-              <span>{rate}%</span>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  value={rate}
+                  step="0.1"
+                  onChange={(e) => setRate(parseFloat(e.target.value) || 0)}
+                  className="bg-transparent border-b border-white/10 text-right outline-none focus:border-blue-500 transition-colors w-12"
+                />
+                <span>%</span>
+              </div>
             </div>
             <input
               type="range"
@@ -63,14 +77,22 @@ export function EMICalculator() {
               step="0.1"
               value={rate}
               onChange={(e) => setRate(parseFloat(e.target.value))}
-              className="w-full accent-blue-500"
+              className="w-full accent-blue-500 mb-2"
             />
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-bold text-zinc-500 uppercase tracking-widest px-1 mb-2">
               <span>Tenure (Years)</span>
-              <span>{tenure} Y</span>
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  value={tenure}
+                  onChange={(e) => setTenure(parseInt(e.target.value) || 0)}
+                  className="bg-transparent border-b border-white/10 text-right outline-none focus:border-blue-500 transition-colors w-12"
+                />
+                <span>Y</span>
+              </div>
             </div>
             <input
               type="range"
@@ -79,7 +101,7 @@ export function EMICalculator() {
               step="1"
               value={tenure}
               onChange={(e) => setTenure(parseInt(e.target.value))}
-              className="w-full accent-blue-500"
+              className="w-full accent-blue-500 mb-2"
             />
           </div>
         </div>

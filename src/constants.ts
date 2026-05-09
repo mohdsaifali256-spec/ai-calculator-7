@@ -1,4 +1,5 @@
-export const CURRENCY_NOTES = [500, 200, 100, 50, 20, 10];
+export const CURRENCY_NOTES = [2000, 500, 200, 100, 50, 20, 10];
+export const CURRENCY_COINS = [10, 5, 2, 1];
 
 export const GST_RATES = [5, 12, 18, 28];
 

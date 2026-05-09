@@ -10,6 +10,7 @@ export function NormalCalculator() {
   const { saveCalculation } = useHistory();
 
   const handleNumber = (n: string) => {
+    if (n === "." && display.includes(".")) return;
     if (display === "0" || display === "Error") {
       setDisplay(n);
     } else {
@@ -18,6 +19,7 @@ export function NormalCalculator() {
   };
 
   const handleOperator = (op: string) => {
+    if (display === "Error") return;
     setExpression(display + " " + op + " ");
     setDisplay("0");
   };
@@ -28,6 +30,10 @@ export function NormalCalculator() {
   };
 
   const handleBackspace = () => {
+    if (display === "Error") {
+      handleClear();
+      return;
+    }
     if (display.length > 1) {
       setDisplay(display.slice(0, -1));
     } else {
@@ -36,19 +42,24 @@ export function NormalCalculator() {
   };
 
   const handleEqual = () => {
+    if (expression === "" || display === "Error") return;
     try {
       const fullExpression = expression + display;
-      // Using local eval for simplicity in a calculator app, with basic validation
-      // In a real app we'd use a math library
-      const result = eval(fullExpression.replace(/×/g, "*").replace(/÷/g, "/")).toString();
+      const sanitized = fullExpression.replace(/×/g, "*").replace(/÷/g, "/");
+      const evalResult = eval(sanitized);
+      
+      let resultStr = evalResult.toString();
+      if (resultStr.includes('.') && resultStr.split('.')[1].length > 8) {
+        resultStr = parseFloat(evalResult).toFixed(8).replace(/\.?0+$/, "");
+      }
       
       saveCalculation({
         expression: fullExpression,
-        result: result,
+        result: resultStr,
         type: 'normal'
       });
 
-      setDisplay(result);
+      setDisplay(resultStr);
       setExpression("");
     } catch (e) {
       setDisplay("Error");

@@ -25,18 +25,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        // Sign in anonymously if not logged in (to enable history/cloud features instantly)
-        try {
-          const result = await signInAnonymously(auth);
-          setUser(result.user);
-        } catch (error) {
-          console.error("Auth error:", error);
-        }
-      }
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
       setLoading(false);
     });
     return () => unsubscribe();

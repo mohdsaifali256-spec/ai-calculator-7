@@ -33,39 +33,63 @@ const TOOLS = [
 
 export function Dashboard({ onSelect }: DashboardProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <section>
-        <h2 className="text-sm font-semibold text-zinc-500 uppercase tracking-widest mb-4">Business Suite</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+            <p className="text-slate-500 text-sm font-medium mt-1">Fast. Smart. Professional.</p>
+          </div>
+          <div className="hidden md:flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/10">
+            <div className="text-right">
+              <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Active Status</p>
+              <p className="text-sm font-mono text-green-400">Cloud Sync Ready</p>
+            </div>
+            <div className="w-px h-8 bg-white/10"></div>
+            <button className="bg-blue-600/20 text-blue-400 px-4 py-2 rounded-xl border border-blue-500/20 text-xs font-bold uppercase tracking-widest">
+              Business Mode
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {TOOLS.map((tool, index) => (
             <motion.button
               key={tool.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.05 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
               onClick={() => onSelect(tool.id)}
-              className="glass p-6 rounded-2xl flex flex-col items-center gap-4 group transition-all active:scale-95 hover:border-white/20"
+              className="bg-bg-card p-6 rounded-[32px] border border-white/5 flex flex-col items-center gap-4 group transition-all active:scale-95 hover:border-white/20 hover:bg-white/[0.03]"
             >
-              <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110", tool.bg)}>
+              <div className={cn(
+                "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110", 
+                tool.bg,
+                "group-hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+              )}>
                 <tool.icon className={cn("w-6 h-6", tool.color)} />
               </div>
-              <span className="text-sm font-medium text-zinc-300 group-hover:text-white">{tool.label}</span>
+              <div className="text-center">
+                <span className="text-sm font-bold text-slate-300 group-hover:text-white block">{tool.label}</span>
+                <span className="text-[10px] text-slate-500 font-medium uppercase tracking-tight opacity-0 group-hover:opacity-100 transition-opacity">Launch Tool</span>
+              </div>
             </motion.button>
           ))}
         </div>
       </section>
 
-      <section className="glass rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <ReceiptIndianRupee className="w-24 h-24" />
+      <section className="bg-gradient-to-br from-blue-600/20 to-blue-900/5 rounded-[40px] p-8 border border-blue-500/20 relative overflow-hidden group">
+        <div className="absolute -top-12 -right-12 p-4 opacity-5 group-hover:scale-110 transition-transform duration-700">
+          <Calculator className="w-48 h-48" />
         </div>
-        <div className="relative z-10">
-          <h3 className="text-lg font-bold mb-1">Boost Your Productivity</h3>
-          <p className="text-zinc-400 text-sm mb-4">Professional tools designed for shopkeepers, students, and businesses.</p>
-          <div className="flex gap-2">
-            <span className="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-1 rounded tracking-tighter uppercase font-bold">Fast</span>
-            <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-1 rounded tracking-tighter uppercase font-bold">Secure</span>
-            <span className="text-[10px] bg-purple-500/20 text-purple-400 px-2 py-1 rounded tracking-tighter uppercase font-bold">Smart</span>
+        <div className="relative z-10 max-w-md">
+          <span className="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded font-bold uppercase tracking-widest mb-4 inline-block">New Update</span>
+          <h3 className="text-2xl font-bold mb-2">Smart Business Engine</h3>
+          <p className="text-slate-400 text-sm leading-relaxed mb-6">Experience the fastest business calculations with automated GST splitting and cloud-synced history tracking.</p>
+          <div className="flex gap-3">
+            <div className="h-2 w-8 bg-blue-500 rounded-full"></div>
+            <div className="h-2 w-2 bg-white/20 rounded-full"></div>
+            <div className="h-2 w-2 bg-white/20 rounded-full"></div>
           </div>
         </div>
       </section>

@@ -33,18 +33,21 @@ const NAV_ITEMS: { id: NavTab; label: string; icon: any }[] = [
 
 export function Shell({ children, activeTab, onTabChange }: ShellProps) {
   return (
-    <div className="flex flex-col h-screen bg-zinc-950 overflow-hidden">
+    <div className="flex flex-col h-screen bg-bg-main overflow-hidden">
       {/* Header */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-white/5 glass-dark z-20">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.5)]">
-            <Calculator className="w-5 h-5 text-white" />
+      <header className="px-6 py-5 flex items-center justify-between border-b border-white/5 bg-bg-sidebar/80 backdrop-blur-md z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+            <Calculator className="w-6 h-6 text-white" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight">SmartAdvance</h1>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight leading-none">SmartAdvance</h1>
+            <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-semibold mt-1">Professional Suite</p>
+          </div>
         </div>
         <button 
           onClick={() => onTabChange('settings')}
-          className="p-2 rounded-full hover:bg-white/5 transition-colors"
+          className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5"
         >
           <Settings className="w-5 h-5 text-zinc-400" />
         </button>
@@ -55,11 +58,11 @@ export function Shell({ children, activeTab, onTabChange }: ShellProps) {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="p-4 md:p-6 max-w-4xl mx-auto"
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="p-4 md:p-8 max-w-5xl mx-auto"
           >
             {children}
           </motion.div>
@@ -67,18 +70,24 @@ export function Shell({ children, activeTab, onTabChange }: ShellProps) {
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 glass-dark border-t border-white/5 px-6 py-3 flex justify-between items-center z-30 pb-safe">
+      <nav className="fixed bottom-0 left-0 right-0 bg-bg-sidebar/95 backdrop-blur-xl border-t border-white/5 px-8 pt-4 pb-8 flex justify-between items-center z-30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
         {NAV_ITEMS.map((item) => (
           <button
             key={item.id}
             onClick={() => onTabChange(item.id)}
             className={cn(
-              "flex flex-col items-center gap-1 transition-all",
-              activeTab === item.id ? "text-blue-500" : "text-zinc-500 hover:text-zinc-300"
+              "flex flex-col items-center gap-1.5 transition-all relative",
+              activeTab === item.id ? "text-blue-400" : "text-slate-500 hover:text-slate-300"
             )}
           >
+            {activeTab === item.id && (
+              <motion.div 
+                layoutId="nav-glow"
+                className="absolute -top-4 w-8 h-1 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"
+              />
+            )}
             <item.icon className={cn("w-6 h-6", activeTab === item.id && "drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]")} />
-            <span className="text-[10px] font-medium uppercase tracking-widest">{item.label}</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span>
           </button>
         ))}
       </nav>
