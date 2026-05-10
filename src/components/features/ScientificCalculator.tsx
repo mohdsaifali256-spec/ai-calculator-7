@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Delete, RotateCcw, FunctionSquare } from "lucide-react";
-import { Button } from "../ui/Button";
 import { useHistory } from "../../lib/hooks";
+import { FlaskConical } from "lucide-react";
 
 export function ScientificCalculator() {
   const [display, setDisplay] = useState("0");
@@ -9,7 +8,6 @@ export function ScientificCalculator() {
   const { saveCalculation } = useHistory();
 
   const handleNumber = (n: string) => {
-    if (n === "." && display.includes(".")) return;
     if (display === "0" || display === "Error") setDisplay(n);
     else setDisplay(display + n);
   };
@@ -17,109 +15,95 @@ export function ScientificCalculator() {
   const handleFunc = (func: string) => {
     try {
       let val = parseFloat(display);
-      if (isNaN(val)) return;
-      
-      let result;
-      switch (func) {
-        case 'sin': result = Math.sin(val); break;
-        case 'cos': result = Math.cos(val); break;
-        case 'tan': result = Math.tan(val); break;
-        case 'log': result = Math.log10(val); break;
-        case 'ln': result = Math.log(val); break;
-        case 'sqrt': result = Math.sqrt(val); break;
-        case 'pow2': result = Math.pow(val, 2); break;
-        case 'pi': result = Math.PI; break;
-        case 'e': result = Math.E; break;
-        default: return;
+      let res = 0;
+      switch(func) {
+        case 'sin': res = Math.sin(val); break;
+        case 'cos': res = Math.cos(val); break;
+        case 'tan': res = Math.tan(val); break;
+        case 'log': res = Math.log10(val); break;
+        case 'ln': res = Math.log(val); break;
+        case 'pow': res = Math.pow(val, 2); break;
+        case 'sqrt': res = Math.sqrt(val); break;
       }
-      const resStr = result.toFixed(8).replace(/\.?0+$/, "");
-      saveCalculation({
-        expression: `${func}(${display})`,
-        result: resStr,
-        type: 'scientific'
-      });
+      const resStr = res.toFixed(4).replace(/\.?0+$/, "");
+      saveCalculation({ expression: `${func}(${display})`, result: resStr, type: 'scientific' });
       setDisplay(resStr);
-    } catch (e) {
+    } catch {
       setDisplay("Error");
     }
   };
 
-  const handleEqual = () => {
+  const handleOperator = (op: string) => {
+    setExpression(display + " " + op + " ");
+    setDisplay("0");
+  };
+
+  const calculate = () => {
     try {
-      // Basic sanitized eval
-      const sanitized = display
-        .replace(/π/g, Math.PI.toString())
-        .replace(/e/g, Math.E.toString())
-        .replace(/×/g, "*")
-        .replace(/÷/g, "/");
-      
-      const evalResult = eval(sanitized);
-      const resStr = evalResult.toString();
-      
-      saveCalculation({ expression: display, result: resStr, type: 'scientific' });
+      const fullExpr = expression + display;
+      const result = eval(fullExpr.replace(/×/g, "*").replace(/÷/g, "/"));
+      const resStr = result.toString();
+      saveCalculation({ expression: fullExpr, result: resStr, type: 'scientific' });
       setDisplay(resStr);
-    } catch (e) {
+      setExpression("");
+    } catch {
       setDisplay("Error");
     }
   };
 
-  const FunctionBtn = ({ label, func, color = "text-blue-400" }: { label: string, func: string, color?: string }) => (
-    <Button variant="secondary" size="sm" onClick={() => handleFunc(func)} className={`${color} font-bold text-[10px] uppercase tracking-tighter h-12 rounded-xl border-white/5`}>
-      {label}
-    </Button>
-  );
+  const buttons = [
+    { label: "sin", action: () => handleFunc("sin"), type: "func" },
+    { label: "cos", action: () => handleFunc("cos"), type: "func" },
+    { label: "tan", action: () => handleFunc("tan"), type: "func" },
+    { label: "log", action: () => handleFunc("log"), type: "func" },
+    { label: "7", action: () => handleNumber("7") },
+    { label: "8", action: () => handleNumber("8") },
+    { label: "9", action: () => handleNumber("9") },
+    { label: "÷", action: () => handleOperator("÷"), type: "op" },
+    { label: "4", action: () => handleNumber("4") },
+    { label: "5", action: () => handleNumber("5") },
+    { label: "6", action: () => handleNumber("6") },
+    { label: "×", action: () => handleOperator("×"), type: "op" },
+    { label: "1", action: () => handleNumber("1") },
+    { label: "2", action: () => handleNumber("2") },
+    { label: "3", action: () => handleNumber("3") },
+    { label: "-", action: () => handleOperator("-"), type: "op" },
+    { label: "0", action: () => handleNumber("0") },
+    { label: ".", action: () => handleNumber(".") },
+    { label: "C", action: () => { setDisplay("0"); setExpression(""); }, type: "spec" },
+    { label: "+", action: () => handleOperator("+"), type: "op" },
+    { label: "√", action: () => handleFunc("sqrt"), type: "func" },
+    { label: "π", action: () => setDisplay(Math.PI.toFixed(6)), type: "func" },
+    { label: "^2", action: () => handleFunc("pow"), type: "func" },
+    { label: "=", action: calculate, type: "equal", span: 1 },
+  ];
 
   return (
-    <div className="flex flex-col gap-6 max-w-md mx-auto">
-      <div className="bg-bg-card rounded-[40px] p-8 flex flex-col items-end justify-end h-40 border border-white/5 shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-4 left-4 opacity-20 group-hover:opacity-40 transition-opacity">
-          <FunctionSquare className="w-5 h-5" />
-        </div>
-        <div className="flex flex-col items-end gap-1 relative z-10 w-full overflow-hidden">
-          <span className="text-slate-500 font-mono text-xs truncate max-w-full">{expression}</span>
-          <span className="text-4xl font-mono font-bold text-white tracking-tight break-all text-right">{display}</span>
-        </div>
+    <div className="flex flex-col h-full space-y-4 animate-fade-in pt-4">
+      <div className="bg-bg-card rounded-[32px] p-6 border border-white/5 flex flex-col items-end justify-center min-h-[120px] relative overflow-hidden shadow-xl">
+        <FlaskConical className="absolute top-2 left-2 w-8 h-8 opacity-5 text-primary" />
+        <p className="text-slate-500 font-mono text-xs h-4 overflow-hidden text-right w-full">{expression}</p>
+        <p className="text-4xl font-mono font-bold text-white break-all text-right mt-1">{display}</p>
       </div>
 
-      <div className="grid grid-cols-5 gap-2">
-        <FunctionBtn label="sin" func="sin" />
-        <FunctionBtn label="cos" func="cos" />
-        <FunctionBtn label="tan" func="tan" />
-        <FunctionBtn label="log" func="log" />
-        <FunctionBtn label="ln" func="ln" />
-        
-        <FunctionBtn label="√x" func="sqrt" />
-        <FunctionBtn label="x²" func="pow2" />
-        <FunctionBtn label="π" func="pi" color="text-emerald-400" />
-        <FunctionBtn label="e" func="e" color="text-emerald-400" />
-        <Button variant="danger" size="sm" onClick={() => setDisplay("0")} className="rounded-xl h-12 uppercase font-bold text-[10px]">AC</Button>
-      </div>
-
-      <div className="grid grid-cols-4 gap-3 mt-2">
-        {[7, 8, 9, "÷", 4, 5, 6, "×", 1, 2, 3, "-", 0, ".", "=", "+"].map((label, i) => (
-          <Button
-            key={`num-${i}`}
-            size="lg"
-            variant={typeof label === 'number' || label === '.' ? "secondary" : label === '=' ? "success" : "primary"}
-            className={`rounded-2xl h-16 text-xl font-mono ${label === '=' ? 'neon-green' : ''}`}
-            onClick={() => {
-              if (label === "=") handleEqual();
-              else if (["÷", "×", "-", "+"].includes(label.toString())) setDisplay(display + " " + label + " ");
-              else handleNumber(label.toString());
-            }}
+      <div className="grid grid-cols-4 gap-2 pb-10">
+        {buttons.map((btn, idx) => (
+          <button
+            key={`${btn.label}-${idx}`}
+            onClick={btn.action}
+            className={`
+              h-14 rounded-2xl text-sm font-bold transition-all active:scale-95 flex items-center justify-center
+              ${btn.span === 2 ? "col-span-2" : ""}
+              ${btn.type === 'equal' ? "bg-primary text-white neon-blue" : ""}
+              ${btn.type === 'op' ? "bg-white/10 text-primary" : ""}
+              ${btn.type === 'func' ? "bg-white/5 text-slate-400 font-mono italic" : ""}
+              ${btn.type === 'spec' ? "bg-red-500/10 text-red-400" : ""}
+              ${!btn.type ? "bg-bg-card text-white border border-white/5" : ""}
+            `}
           >
-            {label}
-          </Button>
+            {btn.label}
+          </button>
         ))}
-      </div>
-
-      <div className="flex gap-3">
-        <Button variant="secondary" onClick={() => setDisplay(display.slice(0, -1) || "0")} className="flex-1 h-14 rounded-2xl">
-          <Delete className="w-5 h-5 mr-2" /> Backspace
-        </Button>
-        <Button variant="secondary" onClick={() => { setDisplay("0"); setExpression(""); }} className="flex-1 h-14 rounded-2xl">
-          <RotateCcw className="w-5 h-5 mr-2" /> Reset
-        </Button>
       </div>
     </div>
   );

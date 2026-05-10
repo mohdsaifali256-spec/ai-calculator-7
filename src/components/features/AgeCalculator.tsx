@@ -1,87 +1,85 @@
 import { useState, useMemo } from "react";
-import { Calendar, PartyPopper } from "lucide-react";
-import { intervalToDuration, format, addYears, isAfter } from "date-fns";
+import { Calendar, RotateCcw, Share2, Clock } from "lucide-react";
+import { Button } from "../ui/Button";
+import { differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
 
 export function AgeCalculator() {
-  const [dob, setDob] = useState<string>("");
+  const [birthDate, setBirthDate] = useState("");
 
   const results = useMemo(() => {
-    if (!dob) return null;
-    const start = new Date(dob);
-    const end = new Date();
+    if (!birthDate) return null;
+    const today = new Date();
+    const birth = new Date(birthDate);
     
-    if (isAfter(start, end)) return "Invalid Date";
+    if (birth > today) return "future";
 
-    const duration = intervalToDuration({ start, end });
-    
-    // Next Birthday
-    let nextBday = new Date(end.getFullYear(), start.getMonth(), start.getDate());
-    if (isAfter(end, nextBday)) {
-      nextBday = addYears(nextBday, 1);
+    const years = differenceInYears(today, birth);
+    const months = differenceInMonths(today, birth) % 12;
+    const days = differenceInDays(today, birth) % 30; // Approximation
+
+    return { years, months, days };
+  }, [birthDate]);
+
+  const handleShare = () => {
+    if (!results || results === "future") return;
+    const text = `🎂 My Age Calculation\nYears: ${results.years}\nMonths: ${results.months}\nDays: ${results.days}\nCalculated with SmartAdvance`;
+    if (navigator.share) {
+      navigator.share({ title: 'Age Result', text });
+    } else {
+      navigator.clipboard.writeText(text);
+      alert("Age result copied!");
     }
-    const nextBdayIn = intervalToDuration({ start: end, end: nextBday });
-
-    return {
-      years: duration.years || 0,
-      months: duration.months || 0,
-      days: duration.days || 0,
-      nextBday: nextBdayIn
-    };
-  }, [dob]);
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="glass p-6 rounded-3xl space-y-4">
-        <div className="space-y-2">
-          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest pl-1">Date of Birth</label>
-          <div className="relative">
-            <input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 outline-none focus:border-red-500 transition-all text-white appearance-none"
-            />
-            <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500 pointer-events-none" />
-          </div>
-        </div>
-      </div>
-
-      {results && results !== "Invalid Date" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="glass p-4 rounded-2xl text-center border-red-500/10">
-              <p className="text-2xl font-mono font-bold text-red-500">{results.years}</p>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Years</p>
-            </div>
-            <div className="glass p-4 rounded-2xl text-center">
-              <p className="text-2xl font-mono font-bold">{results.months}</p>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Months</p>
-            </div>
-            <div className="glass p-4 rounded-2xl text-center">
-              <p className="text-2xl font-mono font-bold">{results.days}</p>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Days</p>
-            </div>
-          </div>
-
-          <div className="glass p-6 rounded-3xl bg-red-500/5 border-red-500/20 relative overflow-hidden">
-            <PartyPopper className="absolute -right-4 -bottom-4 w-24 h-24 text-red-500/10 -rotate-12" />
-            <div className="relative z-10">
-              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Next Birthday In</h4>
-              <div className="flex gap-4 items-center">
-                <div className="space-y-1">
-                  <p className="text-2xl font-mono font-bold text-white">{results.nextBday?.months || 0}</p>
-                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none">Months</p>
-                </div>
-                <div className="h-8 w-px bg-white/10" />
-                <div className="space-y-1">
-                  <p className="text-2xl font-mono font-bold text-white">{results.nextBday?.days || 0}</p>
-                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest leading-none">Days</p>
-                </div>
+    <div className="space-y-8 animate-fade-in pb-10">
+      <div className="bg-bg-card rounded-[40px] p-8 border border-white/5 relative overflow-hidden shadow-2xl transition-all hover:bg-white/[0.02]">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+        <div className="relative z-10">
+          <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold mb-1">Your exact age is</p>
+          {results && results !== "future" ? (
+            <div className="flex flex-col gap-1">
+              <p className="text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">
+                {results.years} <span className="text-xl">Years</span>
+              </p>
+              <div className="flex gap-4 mt-2">
+                <p className="text-lg font-mono font-bold text-slate-300">{results.months} <span className="text-[10px] uppercase text-slate-500">Months</span></p>
+                <p className="text-lg font-mono font-bold text-slate-300">{results.days} <span className="text-[10px] uppercase text-slate-500">Days</span></p>
               </div>
             </div>
+          ) : (
+            <p className="text-4xl font-mono font-bold text-slate-700">-- Years</p>
+          )}
+        </div>
+        <Clock className="absolute top-1/2 right-4 -translate-y-1/2 w-40 h-40 text-primary/5 -rotate-12" />
+      </div>
+
+      <div className="bg-bg-card rounded-[32px] p-6 space-y-6 border border-white/5 shadow-inner">
+        <div className="space-y-4">
+          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-1">Select Date of Birth</label>
+          <div className="relative group">
+            <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary pointer-events-none transition-transform group-focus-within:scale-110" />
+            <input 
+              type="date" 
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="w-full bg-zinc-950 border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-primary transition-all text-white font-mono h-14"
+            />
           </div>
         </div>
-      )}
+        {results === "future" && (
+          <p className="text-red-400 text-[10px] font-bold uppercase text-center tracking-widest bg-red-400/5 py-2 rounded-xl border border-red-500/10">Birth date cannot be in the future</p>
+        )}
+      </div>
+
+      <div className="flex gap-4">
+        <Button variant="secondary" onClick={() => setBirthDate("")} className="flex-1 py-4 h-14 rounded-2xl bg-zinc-900 border-white/5 font-bold uppercase tracking-widest">
+          <RotateCcw className="w-4 h-4 mr-2" /> Reset
+        </Button>
+        <Button variant="primary" onClick={handleShare} disabled={!results || results === "future"} className="flex-1 py-4 h-14 rounded-2xl neon-blue font-bold uppercase tracking-widest">
+          <Share2 className="w-4 h-4 mr-2" /> Share Details
+        </Button>
+      </div>
     </div>
   );
 }

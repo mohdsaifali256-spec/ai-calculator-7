@@ -1,125 +1,166 @@
-import { collection, addDoc, serverTimestamp, query, where, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
-import { db, auth } from "./firebase";
-import { CalculationEntry, CashRecordEntry } from "../types";
+import { useState, useEffect } from "react";
+import { CalculationEntry, CashRecordEntry, ExpenseEntry } from "../types";
+import { TRANSLATIONS, LanguageCode, t } from "./i18n";
+
+const HISTORY_KEY = 'smart_calc_history';
+const CASH_HISTORY_KEY = 'smart_calc_cash_history';
+const EXPENSES_KEY = 'smart_calc_expenses';
 
 export function useHistory() {
   const saveCalculation = async (entry: Omit<CalculationEntry, 'id' | 'timestamp' | 'userId'>) => {
-    const timestamp = new Date();
-    const localEntry = { ...entry, timestamp, id: Date.now().toString() };
+    const newEntry: CalculationEntry = {
+      ...entry,
+      id: `calc-${Date.now()}`,
+      timestamp: new Date(),
+      userId: 'local-user'
+    };
     
-    // Always save to local storage for offline access
-    const localData = JSON.parse(localStorage.getItem('local_history') || '[]');
-    localStorage.setItem('local_history', JSON.stringify([localEntry, ...localData].slice(0, 50)));
-
-    if (!auth.currentUser) return;
-
-    try {
-      await addDoc(collection(db, 'calculations'), {
-        ...entry,
-        userId: auth.currentUser.uid,
-        timestamp: serverTimestamp()
-      });
-    } catch (error) {
-      console.error("Error saving remote history:", error);
-    }
-  };
-
-  const saveCashRecord = async (entry: Omit<CashRecordEntry, 'id' | 'date' | 'userId'>) => {
-    const date = new Date();
-    const localEntry = { ...entry, date, id: `cash-${Date.now()}` };
-
-    const localData = JSON.parse(localStorage.getItem('local_cash_history') || '[]');
-    localStorage.setItem('local_cash_history', JSON.stringify([localEntry, ...localData].slice(0, 50)));
-
-    if (!auth.currentUser) return;
-
-    try {
-      await addDoc(collection(db, 'cash_records'), {
-        ...entry,
-        userId: auth.currentUser.uid,
-        date: serverTimestamp()
-      });
-    } catch (error) {
-      console.error("Error saving remote cash record:", error);
-    }
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    localStorage.setItem(HISTORY_KEY, JSON.stringify([newEntry, ...history].slice(0, 50)));
+    return newEntry;
   };
 
   const getHistory = async (sortOrder: 'asc' | 'desc' = 'desc') => {
-    let results: CalculationEntry[] = [];
-
-    // Always get local first
-    const localData = JSON.parse(localStorage.getItem('local_history') || '[]');
-    results = localData.map((d: any) => ({ ...d, timestamp: new Date(d.timestamp) }));
-
-    if (auth.currentUser) {
-      try {
-        const q = query(
-          collection(db, 'calculations'),
-          where('userId', '==', auth.currentUser.uid),
-          orderBy('timestamp', sortOrder),
-          limit(50)
-        );
-        const snapshot = await getDocs(q);
-        const remoteData = snapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            timestamp: (data.timestamp as Timestamp)?.toDate() || new Date()
-          };
-        }) as CalculationEntry[];
-
-        // Merge and de-duplicate (prefer remote)
-        const merged = [...remoteData];
-        return merged;
-      } catch (error) {
-        console.error("Error fetching remote history:", error);
-      }
-    }
-
-    // Return sorted local if remote fails or not logged in
-    return results.sort((a, b) => {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]') as CalculationEntry[];
+    return history.sort((a, b) => {
       const timeA = new Date(a.timestamp).getTime();
       const timeB = new Date(b.timestamp).getTime();
       return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
     });
   };
 
+  const saveCashRecord = async (entry: Omit<CashRecordEntry, 'id' | 'date' | 'userId'>) => {
+    const newEntry: CashRecordEntry = {
+      ...entry,
+      id: `cash-${Date.now()}`,
+      date: new Date(),
+      userId: 'local-user'
+    };
+    const history = JSON.parse(localStorage.getItem(CASH_HISTORY_KEY) || '[]');
+    localStorage.setItem(CASH_HISTORY_KEY, JSON.stringify([newEntry, ...history].slice(0, 50)));
+    return newEntry;
+  };
+
   const getCashHistory = async (sortOrder: 'asc' | 'desc' = 'desc') => {
-    let results: CashRecordEntry[] = [];
-
-    const localData = JSON.parse(localStorage.getItem('local_cash_history') || '[]');
-    results = localData.map((d: any) => ({ ...d, date: new Date(d.date) }));
-
-    if (auth.currentUser) {
-      try {
-        const q = query(
-          collection(db, 'cash_records'),
-          where('userId', '==', auth.currentUser.uid),
-          orderBy('date', sortOrder),
-          limit(50)
-        );
-        const snapshot = await getDocs(q);
-        const remoteData = snapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            date: (data.date as Timestamp)?.toDate() || new Date()
-          };
-        }) as CashRecordEntry[];
-        return remoteData;
-      } catch (error) {
-        console.error("Error fetching remote cash history:", error);
-      }
-    }
-
-    return results.sort((a, b) => {
+    const history = JSON.parse(localStorage.getItem(CASH_HISTORY_KEY) || '[]') as CashRecordEntry[];
+    return history.sort((a, b) => {
       const timeA = new Date(a.date).getTime();
       const timeB = new Date(b.date).getTime();
       return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
     });
   };
 
-  return { saveCalculation, saveCashRecord, getHistory, getCashHistory };
+  const clearAllData = () => {
+    localStorage.removeItem(HISTORY_KEY);
+    localStorage.removeItem(CASH_HISTORY_KEY);
+    localStorage.removeItem(EXPENSES_KEY);
+  };
+
+  return { saveCalculation, getHistory, saveCashRecord, getCashHistory, clearAllData };
+}
+
+export function useExpenses() {
+  const getExpenses = () => {
+    const data = JSON.parse(localStorage.getItem(EXPENSES_KEY) || '[]') as ExpenseEntry[];
+    return data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  };
+
+  const addExpense = (entry: Omit<ExpenseEntry, 'id' | 'userId'>) => {
+    const newEntry: ExpenseEntry = {
+      ...entry,
+      id: `exp-${Date.now()}`,
+      userId: 'local-user'
+    };
+    const expenses = getExpenses();
+    localStorage.setItem(EXPENSES_KEY, JSON.stringify([newEntry, ...expenses]));
+    return newEntry;
+  };
+
+  const deleteExpense = (id: string) => {
+    const expenses = getExpenses().filter(e => e.id !== id);
+    localStorage.setItem(EXPENSES_KEY, JSON.stringify(expenses));
+  };
+
+  return { getExpenses, addExpense, deleteExpense };
+}
+
+const SETTINGS_KEY = 'smart_calc_settings';
+
+export interface AppSettings {
+  sounds: boolean;
+  haptic: boolean;
+  language: 'en' | 'hi' | 'bn';
+}
+
+const defaultSettings: AppSettings = {
+  sounds: true,
+  haptic: true,
+  language: 'en'
+};
+
+export function useSettings() {
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    const saved = localStorage.getItem(SETTINGS_KEY);
+    if (!saved) return defaultSettings;
+    try {
+      return { ...defaultSettings, ...JSON.parse(saved) };
+    } catch {
+      return defaultSettings;
+    }
+  });
+
+  useEffect(() => {
+    const handleSettingsChange = (e: any) => {
+      setSettings(e.detail);
+    };
+    window.addEventListener('settingsChanged', handleSettingsChange);
+    return () => window.removeEventListener('settingsChanged', handleSettingsChange);
+  }, []);
+
+  const saveSettings = (newSettings: Partial<AppSettings>) => {
+    const updated = { ...settings, ...newSettings };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent('settingsChanged', { detail: updated }));
+    return updated;
+  };
+
+  return { settings, saveSettings };
+}
+
+export function useTranslation() {
+  const { settings } = useSettings();
+  const lang = settings.language;
+  
+  const T = (key: keyof typeof TRANSLATIONS['en']) => t(key, lang);
+  
+  return { T, lang };
+}
+
+export function useInteractions() {
+  const { settings } = useSettings();
+
+  const playInteraction = () => {
+    if (settings.haptic && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+    
+    if (settings.sounds) {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      oscillator.start();
+      oscillator.stop(audioCtx.currentTime + 0.1);
+    }
+  };
+
+  return { playInteraction };
 }

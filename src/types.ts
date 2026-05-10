@@ -10,20 +10,22 @@ export type NavTab =
   | 'expense'
   | 'converter'
   | 'age'
+  | 'bmi'
+  | 'loan'
   | 'history'
   | 'settings';
 
 export interface CalculationEntry {
-  id?: string;
+  id: string;
   expression: string;
   result: string;
   timestamp: Date;
-  type: 'normal' | 'scientific' | 'gst' | 'emi';
+  type: string;
   userId: string;
 }
 
 export interface ExpenseEntry {
-  id?: string;
+  id: string;
   amount: number;
   category: string;
   type: 'income' | 'expense';
@@ -33,11 +35,20 @@ export interface ExpenseEntry {
 }
 
 export interface CashRecordEntry {
-  id?: string;
+  id: string;
   notes: Record<string, number>;
   total: number;
   date: Date;
   userId: string;
+}
+
+export interface BmiEntry {
+  id: string;
+  height: number;
+  weight: number;
+  bmi: number;
+  status: string;
+  date: Date;
 }
 
 export interface InvoiceEntry {
