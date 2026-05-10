@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Plus, Trash2, FileText, Download, Share2, Receipt, Store, User, RotateCcw } from "lucide-react";
+import { Plus, Trash2, Download, Store, User, RotateCcw } from "lucide-react";
 import { Button } from "../ui/Button";
 import { formatCurrency } from "../../lib/utils";
 import jsPDF from "jspdf";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 interface InvoiceItem {
   id: string;
@@ -17,12 +18,16 @@ export function InvoiceGenerator() {
   const [items, setItems] = useState<InvoiceItem[]>([
     { id: '1', desc: 'Sample Item', qty: 1, price: 100 }
   ]);
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const addItem = () => {
+    playInteraction('tap');
     setItems([...items, { id: Date.now().toString(), desc: '', qty: 1, price: 0 }]);
   };
 
   const removeItem = (id: string) => {
+    playInteraction('delete');
     setItems(items.filter(i => i.id !== id));
   };
 
@@ -35,6 +40,7 @@ export function InvoiceGenerator() {
   const total = subtotal + gst;
 
   const exportPDF = () => {
+    playInteraction('success');
     const doc = new jsPDF();
     doc.setFontSize(22);
     doc.text(shopName || 'TAX INVOICE', 105, 20, { align: 'center' });
@@ -72,6 +78,7 @@ export function InvoiceGenerator() {
   };
 
   const handleReset = () => {
+    playInteraction('back');
     setShopName("");
     setClientName("");
     setItems([{ id: '1', desc: '', qty: 1, price: 0 }]);
@@ -167,7 +174,7 @@ export function InvoiceGenerator() {
 
       <div className="flex gap-3">
         <Button variant="secondary" onClick={handleReset} className="flex-1 py-4 h-14 rounded-2xl bg-zinc-900 border-white/5">
-          <RotateCcw className="w-4 h-4 mr-2" /> Reset
+          <RotateCcw className="w-4 h-4 mr-2" /> {T('reset')}
         </Button>
         <Button variant="primary" onClick={exportPDF} className="flex-[2] py-4 h-14 rounded-2xl neon-blue font-bold uppercase tracking-widest">
           <Download className="w-4 h-4 mr-2" /> Download PDF

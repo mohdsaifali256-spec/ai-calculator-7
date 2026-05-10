@@ -1,18 +1,21 @@
 import { useState } from "react";
-import { useHistory } from "../../lib/hooks";
+import { useHistory, useInteractions } from "../../lib/hooks";
 import { FlaskConical } from "lucide-react";
 
 export function ScientificCalculator() {
   const [display, setDisplay] = useState("0");
   const [expression, setExpression] = useState("");
   const { saveCalculation } = useHistory();
+  const { playInteraction } = useInteractions();
 
   const handleNumber = (n: string) => {
+    playInteraction('tap');
     if (display === "0" || display === "Error") setDisplay(n);
     else setDisplay(display + n);
   };
 
   const handleFunc = (func: string) => {
+    playInteraction('click');
     try {
       let val = parseFloat(display);
       let res = 0;
@@ -29,16 +32,19 @@ export function ScientificCalculator() {
       saveCalculation({ expression: `${func}(${display})`, result: resStr, type: 'scientific' });
       setDisplay(resStr);
     } catch {
+      playInteraction('error');
       setDisplay("Error");
     }
   };
 
   const handleOperator = (op: string) => {
+    playInteraction('click');
     setExpression(display + " " + op + " ");
     setDisplay("0");
   };
 
   const calculate = () => {
+    playInteraction('success');
     try {
       const fullExpr = expression + display;
       const result = eval(fullExpr.replace(/×/g, "*").replace(/÷/g, "/"));
@@ -47,6 +53,7 @@ export function ScientificCalculator() {
       setDisplay(resStr);
       setExpression("");
     } catch {
+      playInteraction('error');
       setDisplay("Error");
     }
   };
@@ -70,7 +77,7 @@ export function ScientificCalculator() {
     { label: "-", action: () => handleOperator("-"), type: "op" },
     { label: "0", action: () => handleNumber("0") },
     { label: ".", action: () => handleNumber(".") },
-    { label: "C", action: () => { setDisplay("0"); setExpression(""); }, type: "spec" },
+    { label: "C", action: () => { playInteraction('delete'); setDisplay("0"); setExpression(""); }, type: "spec" },
     { label: "+", action: () => handleOperator("+"), type: "op" },
     { label: "√", action: () => handleFunc("sqrt"), type: "func" },
     { label: "π", action: () => setDisplay(Math.PI.toFixed(6)), type: "func" },

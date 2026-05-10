@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory, useInteractions } from "../../lib/hooks";
+import { useHistory, useInteractions, InteractionType } from "../../lib/hooks";
 
 export function NormalCalculator() {
   const [display, setDisplay] = useState("0");
@@ -7,9 +7,9 @@ export function NormalCalculator() {
   const { saveCalculation } = useHistory();
   const { playInteraction } = useInteractions();
 
-  const wrapAction = (fn: () => void) => {
+  const wrapAction = (fn: () => void, type: InteractionType = 'tap') => {
     return () => {
-      playInteraction();
+      playInteraction(type);
       fn();
     };
   };
@@ -36,9 +36,13 @@ export function NormalCalculator() {
       setDisplay(resultStr);
       setExpression("");
       if (resultStr !== "Error") {
+        playInteraction('success');
         saveCalculation({ expression: fullExpr, result: resultStr, type: 'normal' });
+      } else {
+        playInteraction('error');
       }
     } catch {
+      playInteraction('error');
       setDisplay("Error");
     }
   };
@@ -54,24 +58,24 @@ export function NormalCalculator() {
   };
 
   const buttons = [
-    { label: "C", action: wrapAction(clear), type: "spec" },
-    { label: "÷", action: wrapAction(() => handleOperator("÷")), type: "op" },
-    { label: "×", action: wrapAction(() => handleOperator("×")), type: "op" },
-    { label: "⌫", action: wrapAction(backspace), type: "spec" },
-    { label: "7", action: wrapAction(() => handleNumber("7")) },
-    { label: "8", action: wrapAction(() => handleNumber("8")) },
-    { label: "9", action: wrapAction(() => handleNumber("9")) },
-    { label: "-", action: wrapAction(() => handleOperator("-")), type: "op" },
-    { label: "4", action: wrapAction(() => handleNumber("4")) },
-    { label: "5", action: wrapAction(() => handleNumber("5")) },
-    { label: "6", action: wrapAction(() => handleNumber("6")) },
-    { label: "+", action: wrapAction(() => handleOperator("+")), type: "op" },
-    { label: "1", action: wrapAction(() => handleNumber("1")) },
-    { label: "2", action: wrapAction(() => handleNumber("2")) },
-    { label: "3", action: wrapAction(() => handleNumber("3")) },
-    { label: "=", action: wrapAction(calculate), type: "equal" },
-    { label: "0", action: wrapAction(() => handleNumber("0")), span: 2 },
-    { label: ".", action: wrapAction(() => handleNumber(".")) },
+    { label: "C", action: wrapAction(clear, 'delete'), type: "spec" },
+    { label: "÷", action: wrapAction(() => handleOperator("÷"), 'click'), type: "op" },
+    { label: "×", action: wrapAction(() => handleOperator("×"), 'click'), type: "op" },
+    { label: "⌫", action: wrapAction(backspace, 'delete'), type: "spec" },
+    { label: "7", action: wrapAction(() => handleNumber("7"), 'tap') },
+    { label: "8", action: wrapAction(() => handleNumber("8"), 'tap') },
+    { label: "9", action: wrapAction(() => handleNumber("9"), 'tap') },
+    { label: "-", action: wrapAction(() => handleOperator("-"), 'click'), type: "op" },
+    { label: "4", action: wrapAction(() => handleNumber("4"), 'tap') },
+    { label: "5", action: wrapAction(() => handleNumber("5"), 'tap') },
+    { label: "6", action: wrapAction(() => handleNumber("6"), 'tap') },
+    { label: "+", action: wrapAction(() => handleOperator("+"), 'click'), type: "op" },
+    { label: "1", action: wrapAction(() => handleNumber("1"), 'tap') },
+    { label: "2", action: wrapAction(() => handleNumber("2"), 'tap') },
+    { label: "3", action: wrapAction(() => handleNumber("3"), 'tap') },
+    { label: "=", action: calculate, type: "equal" },
+    { label: "0", action: wrapAction(() => handleNumber("0"), 'tap'), span: 2 },
+    { label: ".", action: wrapAction(() => handleNumber("."), 'tap') },
   ];
 
   return (

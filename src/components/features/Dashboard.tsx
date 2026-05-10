@@ -43,7 +43,7 @@ export function Dashboard({ onSelect }: DashboardProps) {
   const { playInteraction } = useInteractions();
 
   const handleSelect = (id: NavTab) => {
-    playInteraction();
+    playInteraction('tap');
     onSelect(id);
   };
 

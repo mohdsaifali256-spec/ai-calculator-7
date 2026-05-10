@@ -34,12 +34,12 @@ export function Shell({ children, activeTab, onTabChange, onBack }: ShellProps) 
   const { T } = useTranslation();
 
   const handleTabChange = (tab: NavTab) => {
-    playInteraction();
+    playInteraction('tap');
     onTabChange(tab);
   };
 
   const handleBack = () => {
-    playInteraction();
+    playInteraction('back');
     if (onBack) onBack();
   };
 

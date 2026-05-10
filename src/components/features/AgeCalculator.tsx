@@ -2,9 +2,12 @@ import { useState, useMemo } from "react";
 import { Calendar, RotateCcw, Share2, Clock } from "lucide-react";
 import { Button } from "../ui/Button";
 import { differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 export function AgeCalculator() {
   const [birthDate, setBirthDate] = useState("");
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const results = useMemo(() => {
     if (!birthDate) return null;
@@ -21,6 +24,7 @@ export function AgeCalculator() {
   }, [birthDate]);
 
   const handleShare = () => {
+    playInteraction('tap');
     if (!results || results === "future") return;
     const text = `🎂 My Age Calculation\nYears: ${results.years}\nMonths: ${results.months}\nDays: ${results.days}\nCalculated with SmartAdvance`;
     if (navigator.share) {
@@ -36,7 +40,7 @@ export function AgeCalculator() {
       <div className="bg-bg-card rounded-[40px] p-8 border border-white/5 relative overflow-hidden shadow-2xl transition-all hover:bg-white/[0.02]">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl" />
         <div className="relative z-10">
-          <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold mb-1">Your exact age is</p>
+          <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold mb-1">{T('your_age')}</p>
           {results && results !== "future" ? (
             <div className="flex flex-col gap-1">
               <p className="text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">
@@ -56,13 +60,16 @@ export function AgeCalculator() {
 
       <div className="bg-bg-card rounded-[32px] p-6 space-y-6 border border-white/5 shadow-inner">
         <div className="space-y-4">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-1">Select Date of Birth</label>
+          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-1">{T('select_dob')}</label>
           <div className="relative group">
             <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary pointer-events-none transition-transform group-focus-within:scale-110" />
             <input 
               type="date" 
               value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
+              onChange={(e) => {
+                playInteraction('click');
+                setBirthDate(e.target.value);
+              }}
               className="w-full bg-zinc-950 border border-white/5 p-4 pl-12 rounded-2xl outline-none focus:border-primary transition-all text-white font-mono h-14"
             />
           </div>
@@ -73,11 +80,18 @@ export function AgeCalculator() {
       </div>
 
       <div className="flex gap-4">
-        <Button variant="secondary" onClick={() => setBirthDate("")} className="flex-1 py-4 h-14 rounded-2xl bg-zinc-900 border-white/5 font-bold uppercase tracking-widest">
-          <RotateCcw className="w-4 h-4 mr-2" /> Reset
+        <Button 
+          variant="secondary" 
+          onClick={() => {
+            playInteraction('back');
+            setBirthDate("");
+          }} 
+          className="flex-1 py-4 h-14 rounded-2xl bg-zinc-900 border-white/5 font-bold uppercase tracking-widest"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" /> {T('reset')}
         </Button>
         <Button variant="primary" onClick={handleShare} disabled={!results || results === "future"} className="flex-1 py-4 h-14 rounded-2xl neon-blue font-bold uppercase tracking-widest">
-          <Share2 className="w-4 h-4 mr-2" /> Share Details
+          <Share2 className="w-4 h-4 mr-2" /> {T('share_details')}
         </Button>
       </div>
     </div>

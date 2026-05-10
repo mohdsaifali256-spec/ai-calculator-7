@@ -86,6 +86,8 @@ export function useExpenses() {
 
 const SETTINGS_KEY = 'smart_calc_settings';
 
+export type InteractionType = 'click' | 'success' | 'error' | 'back' | 'delete' | 'tap';
+
 export interface AppSettings {
   sounds: boolean;
   haptic: boolean;
@@ -143,26 +145,79 @@ export function useTranslation() {
 export function useInteractions() {
   const { settings } = useSettings();
 
-  const playInteraction = () => {
+  const playInteraction = (type: InteractionType = 'click') => {
+    // 1. Haptic Feedback
     if (settings.haptic && navigator.vibrate) {
-      navigator.vibrate(settings.hapticIntensity || 10);
+      let duration = settings.hapticIntensity || 15;
+      if (type === 'success') duration = 30;
+      if (type === 'error') duration = 50;
+      if (type === 'delete') duration = 40;
+      navigator.vibrate(duration);
     }
     
+    // 2. Sound Synthesis (Zero-latency offline support)
     if (settings.sounds) {
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
+      const vol = (settings.soundVolume || 50) / 500;
 
       oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime((settings.soundVolume || 50) / 500, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+      
+      let frequency = 800;
+      let decay = 0.1;
+
+      switch(type) {
+        case 'success':
+          frequency = 1200;
+          decay = 0.2;
+          break;
+        case 'error':
+          frequency = 200;
+          decay = 0.3;
+          oscillator.type = 'square';
+          break;
+        case 'back':
+          frequency = 600;
+          decay = 0.1;
+          break;
+        case 'delete':
+          frequency = 400;
+          decay = 0.15;
+          oscillator.type = 'triangle';
+          break;
+        case 'tap':
+          frequency = 900;
+          decay = 0.05;
+          break;
+        default:
+          frequency = 800;
+          decay = 0.1;
+      }
+
+      oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+      gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + decay);
 
       oscillator.connect(gainNode);
       gainNode.connect(audioCtx.destination);
 
       oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.1);
+      oscillator.stop(audioCtx.currentTime + decay);
+      
+      // Secondary note for success "ding"
+      if (type === 'success') {
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1500, audioCtx.currentTime + 0.1);
+        gain2.gain.setValueAtTime(vol, audioCtx.currentTime + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(audioCtx.currentTime + 0.1);
+        osc2.stop(audioCtx.currentTime + 0.3);
+      }
     }
   };
 

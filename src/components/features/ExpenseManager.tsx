@@ -4,7 +4,7 @@ import { ResponsiveContainer, BarChart, Bar, Tooltip, Cell } from "recharts";
 import { Button } from "../ui/Button";
 import { EXPENSE_CATEGORIES } from "../../constants";
 import { formatCurrency, cn } from "../../lib/utils";
-import { useExpenses } from "../../lib/hooks";
+import { useExpenses, useTranslation, useInteractions } from "../../lib/hooks";
 
 export function ExpenseManager() {
   const { getExpenses, addExpense, deleteExpense } = useExpenses();
@@ -12,6 +12,8 @@ export function ExpenseManager() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
   const [type, setType] = useState<"income" | "expense">("expense");
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   useEffect(() => {
     setExpenses(getExpenses());
@@ -25,6 +27,7 @@ export function ExpenseManager() {
 
   const handleAdd = () => {
     if (!amount) return;
+    playInteraction('success');
     const newExp = addExpense({
       amount: parseFloat(amount),
       category,
@@ -36,6 +39,7 @@ export function ExpenseManager() {
   };
 
   const handleDelete = (id: string) => {
+    playInteraction('delete');
     deleteExpense(id);
     setExpenses(expenses.filter(e => e.id !== id));
   };
@@ -98,13 +102,13 @@ export function ExpenseManager() {
           <div className="flex gap-4 items-center">
             <div className="flex bg-zinc-950 p-1.5 rounded-2xl border border-white/5 flex-1">
               <button 
-                onClick={() => setType("income")} 
+                onClick={() => { playInteraction('click'); setType("income"); }} 
                 className={cn("flex-1 py-2 rounded-xl text-[10px] uppercase font-bold transition-all", type === "income" ? "bg-emerald-600 text-white shadow-lg" : "text-slate-500")}
               >
                 In
               </button>
               <button 
-                onClick={() => setType("expense")} 
+                onClick={() => { playInteraction('click'); setType("expense"); }} 
                 className={cn("flex-1 py-2 rounded-xl text-[10px] uppercase font-bold transition-all", type === "expense" ? "bg-red-600 text-white shadow-lg" : "text-slate-500")}
               >
                 Out

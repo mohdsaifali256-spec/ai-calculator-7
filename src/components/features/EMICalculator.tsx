@@ -2,11 +2,14 @@ import { useState, useMemo } from "react";
 import { CreditCard, RotateCcw, Share2, Info } from "lucide-react";
 import { Button } from "../ui/Button";
 import { formatCurrency } from "../../lib/utils";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 export function EMICalculator() {
   const [loanAmount, setLoanAmount] = useState(100000);
   const [interestRate, setInterestRate] = useState(10.5);
   const [tenure, setTenure] = useState(12);
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const results = useMemo(() => {
     const r = interestRate / 12 / 100;
@@ -18,6 +21,7 @@ export function EMICalculator() {
   }, [loanAmount, interestRate, tenure]);
 
   const handleShare = async () => {
+    playInteraction('tap');
     const text = `📊 Loan EMI Summary\n------------------\nLoan: ${formatCurrency(loanAmount)}\nInterest: ${interestRate}%\nTenure: ${tenure} Months\n------------------\nEMI: ${formatCurrency(results.emi)}\nTotal Interest: ${formatCurrency(results.totalInterest)}\nTotal Payment: ${formatCurrency(results.totalPayment)}`;
     if (navigator.share) {
       await navigator.share({ title: 'EMI Calculation', text });
@@ -55,7 +59,8 @@ export function EMICalculator() {
           min={10000} 
           max={10000000} 
           step={10000} 
-          onChange={setLoanAmount} 
+          onChange={setLoanAmount}
+          onInteract={() => playInteraction('tap')}
         />
         <SliderInput 
           label="Interest Rate (%)" 
@@ -64,6 +69,7 @@ export function EMICalculator() {
           max={30} 
           step={0.1} 
           onChange={setInterestRate} 
+          onInteract={() => playInteraction('tap')}
         />
         <SliderInput 
           label="Tenure (Months)" 
@@ -72,15 +78,25 @@ export function EMICalculator() {
           max={360} 
           step={1} 
           onChange={setTenure} 
+          onInteract={() => playInteraction('tap')}
         />
       </div>
 
       <div className="flex gap-4">
-        <Button variant="secondary" onClick={() => { setLoanAmount(100000); setInterestRate(10.5); setTenure(12); }} className="flex-1 py-4 rounded-2xl bg-zinc-900 border border-white/5 font-bold uppercase tracking-widest h-14">
-          <RotateCcw className="w-4 h-4 mr-2" /> Reset
+        <Button 
+          variant="secondary" 
+          onClick={() => { 
+            playInteraction('back');
+            setLoanAmount(100000); 
+            setInterestRate(10.5); 
+            setTenure(12); 
+          }} 
+          className="flex-1 py-4 rounded-2xl bg-zinc-900 border border-white/5 font-bold uppercase tracking-widest h-14"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" /> {T('reset')}
         </Button>
         <Button variant="primary" onClick={handleShare} className="flex-1 py-4 rounded-2xl neon-blue font-bold uppercase tracking-widest h-14">
-          <Share2 className="w-4 h-4 mr-2" /> Share Result
+          <Share2 className="w-4 h-4 mr-2" /> {T('share')} Result
         </Button>
       </div>
 
@@ -94,8 +110,8 @@ export function EMICalculator() {
   );
 }
 
-function SliderInput({ label, value, min, max, step, onChange }: { 
-  label: string, value: number, min: number, max: number, step: number, onChange: (v: number) => void 
+function SliderInput({ label, value, min, max, step, onChange, onInteract }: { 
+  label: string, value: number, min: number, max: number, step: number, onChange: (v: number) => void, onInteract?: () => void 
 }) {
   return (
     <div className="space-y-4">
@@ -111,7 +127,10 @@ function SliderInput({ label, value, min, max, step, onChange }: {
         max={max} 
         step={step} 
         value={value} 
-        onChange={(e) => onChange(parseFloat(e.target.value))}
+        onChange={(e) => {
+          if (onInteract) onInteract();
+          onChange(parseFloat(e.target.value));
+        }}
         className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary"
       />
     </div>

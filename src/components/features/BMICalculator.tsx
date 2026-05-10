@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Activity, RotateCcw, Save } from "lucide-react";
+import { Activity, RotateCcw } from "lucide-react";
 import { Button } from "../ui/Button";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 export function BMICalculator() {
   const [weight, setWeight] = useState<number>(70);
   const [height, setHeight] = useState<number>(170);
   const [result, setResult] = useState<{ bmi: number, status: string } | null>(null);
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const calculateBMI = () => {
+    playInteraction('success');
     const heightInMeters = height / 100;
     const bmi = weight / (heightInMeters * heightInMeters);
     let status = "";
@@ -42,8 +46,11 @@ export function BMICalculator() {
           </div>
           <input 
             type="range" min="30" max="150" value={weight} 
-            onChange={e => setWeight(parseInt(e.target.value))}
-            className="w-full accent-primary"
+            onChange={e => {
+              playInteraction('tap');
+              setWeight(parseInt(e.target.value));
+            }}
+            className="w-full accent-primary h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
           />
         </div>
 
@@ -54,18 +61,30 @@ export function BMICalculator() {
           </div>
           <input 
             type="range" min="100" max="220" value={height} 
-            onChange={e => setHeight(parseInt(e.target.value))}
-            className="w-full accent-primary"
+            onChange={e => {
+              playInteraction('tap');
+              setHeight(parseInt(e.target.value));
+            }}
+            className="w-full accent-primary h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
           />
         </div>
       </div>
 
       <div className="flex gap-4">
-        <Button variant="secondary" onClick={() => { setWeight(70); setHeight(170); setResult(null); }} className="flex-1 py-4 rounded-2xl">
-          <RotateCcw className="w-5 h-5 mr-2" /> Reset
+        <Button 
+          variant="secondary" 
+          onClick={() => { 
+            playInteraction('back');
+            setWeight(70); 
+            setHeight(170); 
+            setResult(null); 
+          }} 
+          className="flex-1 py-4 rounded-2xl bg-zinc-900 border border-white/5"
+        >
+          <RotateCcw className="w-5 h-5 mr-2" /> {T('reset')}
         </Button>
         <Button variant="primary" onClick={calculateBMI} className="flex-1 py-4 rounded-2xl neon-blue font-bold">
-          Calculate
+          {T('calculate')}
         </Button>
       </div>
     </div>

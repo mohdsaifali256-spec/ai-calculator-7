@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Percent, TrendingUp, RotateCcw, Share2 } from "lucide-react";
 import { formatCurrency, cn } from "../../lib/utils";
 import { Button } from "../ui/Button";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 export function DiscountProfit() {
   const [price, setPrice] = useState<string>("1000");
   const [discountPercent, setDiscountPercent] = useState<string>("10");
   const [costPrice, setCostPrice] = useState<string>("800");
   const [sellingPrice, setSellingPrice] = useState<string>("1200");
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const discountAmount = (parseFloat(price) || 0) * (parseFloat(discountPercent) || 0) / 100;
   const finalPrice = (parseFloat(price) || 0) - discountAmount;
@@ -16,6 +19,7 @@ export function DiscountProfit() {
   const profitMargin = (parseFloat(costPrice) || 0) > 0 ? (profit / parseFloat(costPrice)) * 100 : 0;
 
   const handleShare = (type: 'discount' | 'profit') => {
+    playInteraction('tap');
     let msg = "";
     if (type === 'discount') {
       msg = `🏷️ Discount Calculation\nOriginal: ${formatCurrency(parseFloat(price))}\nOff: ${discountPercent}%\nSavings: ${formatCurrency(discountAmount)}\nFinal Price: ${formatCurrency(finalPrice)}`;
@@ -55,7 +59,10 @@ export function DiscountProfit() {
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => {
+                      playInteraction('click');
+                      setPrice(e.target.value);
+                    }}
                     className="w-full bg-zinc-950 border border-white/5 rounded-xl p-2.5 pl-7 outline-none focus:border-primary transition-all font-mono text-white text-sm"
                   />
                 </div>
@@ -138,8 +145,18 @@ export function DiscountProfit() {
       </section>
 
       <div className="flex gap-4">
-        <Button variant="secondary" onClick={() => { setPrice("1000"); setDiscountPercent("10"); setCostPrice("800"); setSellingPrice("1200"); }} className="w-full py-4 h-14 rounded-2xl bg-zinc-900 border-white/5 font-bold uppercase tracking-widest">
-          <RotateCcw className="w-4 h-4 mr-2" /> Reset All
+        <Button 
+          variant="secondary" 
+          onClick={() => { 
+            playInteraction('back');
+            setPrice("1000"); 
+            setDiscountPercent("10"); 
+            setCostPrice("800"); 
+            setSellingPrice("1200"); 
+          }} 
+          className="w-full py-4 h-14 rounded-2xl bg-zinc-900 border-white/5 font-bold uppercase tracking-widest"
+        >
+          <RotateCcw className="w-4 h-4 mr-2" /> {T('reset')} All
         </Button>
       </div>
     </div>

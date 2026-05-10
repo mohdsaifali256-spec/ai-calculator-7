@@ -2,11 +2,14 @@ import { useState, useMemo } from "react";
 import { HandCoins, RotateCcw, Share2 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { formatCurrency } from "../../lib/utils";
+import { useTranslation, useInteractions } from "../../lib/hooks";
 
 export function LoanCalculator() {
   const [amount, setAmount] = useState(500000);
   const [interest, setInterest] = useState(10);
   const [months, setMonths] = useState(12);
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const results = useMemo(() => {
     const r = interest / 12 / 100;
@@ -43,7 +46,14 @@ export function LoanCalculator() {
             <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Loan Amount</span>
             <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value))} className="bg-transparent text-right font-mono font-bold border-b border-white/10 outline-none w-32" />
           </div>
-          <input type="range" min="10000" max="10000000" step="10000" value={amount} onChange={e => setAmount(Number(e.target.value))} className="w-full accent-primary" />
+          <input 
+            type="range" min="10000" max="10000000" step="10000" value={amount} 
+            onChange={e => {
+              playInteraction('tap');
+              setAmount(Number(e.target.value));
+            }} 
+            className="w-full accent-primary h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer" 
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-6">
@@ -59,11 +69,24 @@ export function LoanCalculator() {
       </div>
 
       <div className="flex gap-4">
-        <Button variant="secondary" onClick={() => { setAmount(500000); setInterest(10); setMonths(12); }} className="flex-1 py-4 rounded-2xl">
-          <RotateCcw className="w-5 h-5 mr-2" /> Reset
+        <Button 
+          variant="secondary" 
+          onClick={() => { 
+            playInteraction('back');
+            setAmount(500000); 
+            setInterest(10); 
+            setMonths(12); 
+          }} 
+          className="flex-1 py-4 rounded-2xl bg-zinc-900 border border-white/5"
+        >
+          <RotateCcw className="w-5 h-5 mr-2" /> {T('reset')}
         </Button>
-        <Button variant="primary" className="flex-1 py-4 rounded-2xl neon-blue font-bold">
-          <Share2 className="w-5 h-5 mr-2" /> Share Details
+        <Button 
+          variant="primary" 
+          onClick={() => playInteraction('tap')}
+          className="flex-1 py-4 rounded-2xl neon-blue font-bold"
+        >
+          <Share2 className="w-5 h-5 mr-2" /> {T('share')} Result
         </Button>
       </div>
     </div>
