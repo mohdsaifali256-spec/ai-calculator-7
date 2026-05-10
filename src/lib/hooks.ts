@@ -90,12 +90,16 @@ export interface AppSettings {
   sounds: boolean;
   haptic: boolean;
   language: 'en' | 'hi' | 'bn';
+  soundVolume: number;
+  hapticIntensity: number;
 }
 
 const defaultSettings: AppSettings = {
   sounds: true,
   haptic: true,
-  language: 'en'
+  language: 'en',
+  soundVolume: 50,
+  hapticIntensity: 15
 };
 
 export function useSettings() {
@@ -141,7 +145,7 @@ export function useInteractions() {
 
   const playInteraction = () => {
     if (settings.haptic && navigator.vibrate) {
-      navigator.vibrate(10);
+      navigator.vibrate(settings.hapticIntensity || 10);
     }
     
     if (settings.sounds) {
@@ -151,8 +155,8 @@ export function useInteractions() {
 
       oscillator.type = 'sine';
       oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime((settings.soundVolume || 50) / 500, audioCtx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
 
       oscillator.connect(gainNode);
       gainNode.connect(audioCtx.destination);

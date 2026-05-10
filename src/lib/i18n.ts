@@ -47,7 +47,18 @@ export const TRANSLATIONS = {
     birthday_math: "Birthday math",
     toolkit: "Digital Toolkit",
     stable: "Stable",
-    business_utility: "Your all-in-one offline business utility suite."
+    business_utility: "Your all-in-one offline business utility suite.",
+    volume: "Volume",
+    intensity: "Intensity",
+    inclusive: "Inclusive",
+    exclusive: "Exclusive",
+    rate: "GST Rate",
+    tax: "GST Tax",
+    details: "Details",
+    calculate: "Calculate",
+    share_details: "Share Details",
+    amount_to_calc: "Amount to Calculate",
+    base_amount: "Base Amount"
   },
   hi: {
     dashboard: "डैशबोर्ड",
@@ -97,7 +108,18 @@ export const TRANSLATIONS = {
     birthday_math: "जन्मदिन गणना",
     toolkit: "डिजिटल टूलकिट",
     stable: "स्थिर",
-    business_utility: "आपका ऑल-इन-वन ऑफलाइन बिजनेस यूटिलिटी सूट।"
+    business_utility: "आपका ऑल-इन-वन ऑफलाइन बिजनेस यूटिलिटी सूट।",
+    volume: "आवाज़",
+    intensity: "तीव्रता",
+    inclusive: "समावेशी",
+    exclusive: "अनन्य",
+    rate: "GST दर",
+    tax: "GST टैक्स",
+    details: "विवरण",
+    calculate: "गणना करें",
+    share_details: "विवरण साझा करें",
+    amount_to_calc: "गणना हेतु राशि",
+    base_amount: "मूल राशि"
   },
   bn: {
     dashboard: "ড্যাশবোর্ড",
@@ -147,7 +169,18 @@ export const TRANSLATIONS = {
     birthday_math: "জন্মদিন গণনা",
     toolkit: "ডিজিটাল টুলকিট",
     stable: "স্থিতিশীল",
-    business_utility: "আপনার অল-ইন-ওয়ান অফলাইন বিজনেস ইউটিলিটি স্যুট।"
+    business_utility: "আপনার অল-ইন-ওয়ান অফলাইন বিজনেস ইউটিলিটি স্যুট।",
+    volume: "আওয়াজ",
+    intensity: "তীব্রতা",
+    inclusive: "অন্তর্ভুক্ত",
+    exclusive: "ব্যতিরেক",
+    rate: "GST হার",
+    tax: "GST ট্যাক্স",
+    details: "বিস্তারিত",
+    calculate: "গণনা করুন",
+    share_details: "শেয়ার করুন",
+    amount_to_calc: "গণনার জন্য পরিমাণ",
+    base_amount: "মূল পরিমাণ"
   }
 };
 

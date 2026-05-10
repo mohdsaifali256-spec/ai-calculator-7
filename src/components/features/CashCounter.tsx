@@ -3,7 +3,7 @@ import { IndianRupee, RotateCcw, Copy, Share2, Banknote, Coins } from "lucide-re
 import { Button } from "../ui/Button";
 import { CURRENCY_NOTES, CURRENCY_COINS } from "../../constants";
 import { formatCurrency } from "../../lib/utils";
-import { useHistory } from "../../lib/hooks";
+import { useHistory, useTranslation, useInteractions } from "../../lib/hooks";
 
 export function CashCounter() {
   const [counts, setCounts] = useState<Record<number, number>>(() => {
@@ -13,6 +13,8 @@ export function CashCounter() {
   });
 
   const { saveCashRecord } = useHistory();
+  const { T } = useTranslation();
+  const { playInteraction } = useInteractions();
 
   const total = useMemo(() => {
     return Object.entries(counts).reduce((sum: number, [val, count]: [string, number]) => {
@@ -21,6 +23,7 @@ export function CashCounter() {
   }, [counts]);
 
   const handleReset = () => {
+    playInteraction();
     const reset: Record<number, number> = {};
     [...CURRENCY_NOTES, ...CURRENCY_COINS].forEach(val => reset[val] = 0);
     setCounts(reset);
@@ -38,11 +41,14 @@ export function CashCounter() {
   };
 
   const handleCopy = () => {
+    playInteraction();
     navigator.clipboard.writeText(generateReport());
+    // Use a custom UI alert if possible, or just standard alert for now
     alert("Full report copied to clipboard!");
   };
 
   const handleShare = async () => {
+    playInteraction();
     const data = generateReport();
     if (navigator.share) {
       try {
@@ -56,6 +62,7 @@ export function CashCounter() {
   };
 
   const handleSave = async () => {
+    playInteraction();
     if (total === 0) return;
     try {
       const stringCounts: Record<string, number> = {};
@@ -89,7 +96,10 @@ export function CashCounter() {
             type="number"
             min="0"
             value={counts[val] || ""}
-            onChange={(e) => setCounts({ ...counts, [val]: Math.max(0, parseInt(e.target.value) || 0) })}
+            onChange={(e) => {
+              playInteraction();
+              setCounts({ ...counts, [val]: Math.max(0, parseInt(e.target.value) || 0) });
+            }}
             className="bg-transparent border-b border-white/5 w-24 text-right focus:border-primary outline-none font-mono text-lg py-1 px-2 text-white"
             placeholder="0"
           />
@@ -112,10 +122,10 @@ export function CashCounter() {
           <p className="text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">{formatCurrency(total)}</p>
           <div className="mt-4 flex gap-4">
             <button onClick={handleCopy} className="text-[10px] uppercase font-bold text-slate-500 flex items-center gap-1 hover:text-white transition-colors">
-              <Copy className="w-3 h-3" /> Copy Report
+              <Copy className="w-3 h-3" /> {T('copy')}
             </button>
             <button onClick={handleShare} className="text-[10px] uppercase font-bold text-slate-500 flex items-center gap-1 hover:text-white transition-colors">
-              <Share2 className="w-3 h-3" /> Share Result
+              <Share2 className="w-3 h-3" /> {T('share')}
             </button>
           </div>
         </div>
@@ -129,7 +139,7 @@ export function CashCounter() {
 
       <div className="flex gap-4 sticky bottom-24 z-10 md:static">
         <Button variant="secondary" onClick={handleReset} className="flex-1 py-4 rounded-2xl font-bold uppercase tracking-widest bg-zinc-900 border border-white/5">
-          <RotateCcw className="w-4 h-4 mr-2" /> Reset
+          <RotateCcw className="w-4 h-4 mr-2" /> {T('reset')}
         </Button>
         <Button variant="primary" onClick={handleSave} className="flex-1 py-4 rounded-2xl font-bold uppercase tracking-widest neon-blue" neon>
           Save Log

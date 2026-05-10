@@ -110,27 +110,70 @@ export function SettingsView() {
       )}
 
       {/* App Preferences */}
-      <section className="bg-bg-card rounded-[32px] overflow-hidden border border-white/5 divide-y divide-white/5">
-        <div className="p-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Volume2 className="w-5 h-5 text-slate-400" />
-            <span className="text-sm font-bold text-slate-300">{T('sounds')}</span>
-          </div>
-          <ToggleButton 
-            enabled={settings.sounds} 
-            onChange={(val) => saveSettings({ sounds: val })} 
-          />
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 px-1">
+          <Smartphone className="w-5 h-5 text-primary" />
+          <h3 className="font-bold text-sm uppercase tracking-widest text-slate-400">{T('preferences')}</h3>
         </div>
-        <div className="p-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <SmartphoneNfc className="w-5 h-5 text-slate-400" />
-            <span className="text-sm font-bold text-slate-300">{T('haptic')}</span>
+        <div className="bg-bg-card rounded-[32px] overflow-hidden border border-white/5 divide-y divide-white/5">
+        <div className="flex flex-col">
+          <div className="p-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Volume2 className="w-5 h-5 text-slate-400" />
+              <span className="text-sm font-bold text-slate-300">{T('sounds')}</span>
+            </div>
+            <ToggleButton 
+              enabled={settings.sounds} 
+              onChange={(val) => saveSettings({ sounds: val })} 
+            />
           </div>
-          <ToggleButton 
-            enabled={settings.haptic} 
-            onChange={(val) => saveSettings({ haptic: val })} 
-          />
+          {settings.sounds && (
+            <div className="px-5 pb-5 animate-in fade-in slide-in-from-top-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{T('volume')}</span>
+                <span className="text-[10px] font-mono text-primary">{settings.soundVolume}%</span>
+              </div>
+              <input 
+                type="range"
+                min="0"
+                max="100"
+                value={settings.soundVolume}
+                onChange={(e) => saveSettings({ soundVolume: parseInt(e.target.value) })}
+                className="w-full accent-primary h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+          )}
         </div>
+
+        <div className="flex flex-col">
+          <div className="p-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <SmartphoneNfc className="w-5 h-5 text-slate-400" />
+              <span className="text-sm font-bold text-slate-300">{T('haptic')}</span>
+            </div>
+            <ToggleButton 
+              enabled={settings.haptic} 
+              onChange={(val) => saveSettings({ haptic: val })} 
+            />
+          </div>
+          {settings.haptic && (
+            <div className="px-5 pb-5 animate-in fade-in slide-in-from-top-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{T('intensity')}</span>
+                <span className="text-[10px] font-mono text-primary">{settings.hapticIntensity}ms</span>
+              </div>
+              <input 
+                type="range"
+                min="5"
+                max="50"
+                value={settings.hapticIntensity}
+                onChange={(e) => saveSettings({ hapticIntensity: parseInt(e.target.value) })}
+                className="w-full accent-primary h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+          )}
+        </div>
+
         <div className="p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Languages className="w-5 h-5 text-slate-400" />
@@ -146,7 +189,8 @@ export function SettingsView() {
             <option value="bn">Bengali</option>
           </select>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Danger Zone */}
       <section className="bg-bg-card rounded-[32px] p-6 border border-white/5">
