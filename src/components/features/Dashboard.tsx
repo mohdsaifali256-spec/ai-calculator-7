@@ -16,6 +16,7 @@ import {
 import { NavTab } from "../../types";
 import { useTranslation, useInteractions } from "../../lib/hooks";
 import { TRANSLATIONS } from "../../lib/i18n";
+import { CreatorTag } from "../ui/CreatorTag";
 
 interface DashboardProps {
   onSelect: (tab: NavTab) => void;
@@ -98,9 +99,7 @@ export function Dashboard({ onSelect }: DashboardProps) {
       </div>
 
       <div className="flex justify-center pt-8 pb-4">
-        <div className="creator-tag !mt-0 !scale-90">
-          <span>@saif_ali_official_07</span>
-        </div>
+        <CreatorTag className="!mt-0 !scale-90" />
       </div>
     </div>
   );

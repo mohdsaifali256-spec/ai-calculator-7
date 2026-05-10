@@ -3,6 +3,7 @@ import { Moon, Languages, Palette, Trash2, Smartphone, Volume2, SmartphoneNfc, C
 import { Button } from "../ui/Button";
 import { THEMES, ThemeName, applyTheme, CustomTheme, saveTheme, getSavedTheme } from "../../lib/theme";
 import { useHistory, useSettings, useTranslation } from "../../lib/hooks";
+import { CreatorTag } from "../ui/CreatorTag";
 
 export function SettingsView() {
   const [activeTheme, setActiveTheme] = useState<ThemeName>('blue');
@@ -207,9 +208,7 @@ export function SettingsView() {
       <div className="text-center py-8 opacity-20 flex flex-col items-center">
         <p className="text-[10px] uppercase tracking-[0.5em] font-medium">{T('app_name' as any)} v2.0.0 (Premium)</p>
         <p className="text-[8px] mt-1">NO FIREBASE • 100% OFFLINE • PRIVACY FIRST</p>
-        <div className="creator-tag mt-8 !opacity-100">
-          <span>@saif_ali_official_07</span>
-        </div>
+        <CreatorTag className="mt-8 !opacity-100" />
       </div>
     </div>
   );

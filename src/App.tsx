@@ -17,6 +17,7 @@ import { SettingsView } from "./components/features/SettingsView";
 import { BMICalculator } from "./components/features/BMICalculator";
 import { LoanCalculator } from "./components/features/LoanCalculator";
 import { getSavedTheme, applyTheme, THEMES } from "./lib/theme";
+import { CreatorTag } from "./components/ui/CreatorTag";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
@@ -72,9 +73,7 @@ export default function App() {
         <p className="text-blue-500 font-bold tracking-[0.3em] text-[8px] sm:text-[10px] uppercase animate-pulse">All Tool Calculator</p>
         <p className="text-slate-600 text-[7px] mt-2 uppercase tracking-widest font-medium">Powering your daily calculations</p>
         
-        <div className="creator-tag">
-          <span>@saif_ali_official_07</span>
-        </div>
+        <CreatorTag />
       </div>
     );
   }

@@ -11,6 +11,7 @@ import { NavTab } from "../../types";
 import { cn } from "../../lib/utils";
 import { useInteractions, useTranslation } from "../../lib/hooks";
 import { TRANSLATIONS } from "../../lib/i18n";
+import { CreatorTag } from "../ui/CreatorTag";
 
 interface ShellProps {
   children: ReactNode;
@@ -92,9 +93,7 @@ export function Shell({ children, activeTab, onTabChange, onBack }: ShellProps) 
             
             {activeTab !== 'home' && (
               <div className="flex justify-center mt-12 mb-8 opacity-40 hover:opacity-100 transition-opacity">
-                <div className="creator-tag !mt-0 !scale-75">
-                  <span>@saif_ali_official_07</span>
-                </div>
+                <CreatorTag className="!mt-0 !scale-75" />
               </div>
             )}
           </motion.div>
