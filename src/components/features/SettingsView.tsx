@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Moon, Languages, Palette, Trash2, Smartphone, Volume2, SmartphoneNfc, Check, Plus } from "lucide-react";
+import { Moon, Languages, Palette, Trash2, Smartphone, Volume2, SmartphoneNfc, Check, Plus, Crown, ShieldCheck, Star } from "lucide-react";
 import { Button } from "../ui/Button";
 import { THEMES, ThemeName, applyTheme, CustomTheme, saveTheme, getSavedTheme } from "../../lib/theme";
 import { useHistory, useSettings, useTranslation } from "../../lib/hooks";
 import { CreatorTag } from "../ui/CreatorTag";
+import { useAds } from "../../lib/ads";
 
 export function SettingsView() {
   const [activeTheme, setActiveTheme] = useState<ThemeName>('blue');
@@ -12,6 +13,7 @@ export function SettingsView() {
   const { clearAllData } = useHistory();
   const { settings, saveSettings } = useSettings();
   const { T } = useTranslation();
+  const { isPremium, showRewarded } = useAds();
 
   useEffect(() => {
     const { name, custom } = getSavedTheme();
@@ -51,6 +53,50 @@ export function SettingsView() {
 
   return (
     <div className="space-y-8 pb-10">
+      {/* Premium Section */}
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 px-1">
+          <Crown className="w-5 h-5 text-yellow-500" />
+          <h3 className="font-bold text-sm uppercase tracking-widest text-slate-400">Premium Options</h3>
+        </div>
+
+        <div className="bg-bg-card rounded-[32px] p-6 border border-white/5 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full -mr-16 -mt-16 blur-3xl opacity-50" />
+          
+          <div className="relative z-10 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                  <ShieldCheck className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-white font-bold leading-tight">Ad-Free Mode</p>
+                  <p className="text-[10px] text-slate-500 uppercase tracking-widest">Global Ad Suppression</p>
+                </div>
+              </div>
+              <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${isPremium ? 'bg-emerald-500/20 text-emerald-500' : 'bg-white/5 text-slate-500'}`}>
+                {isPremium ? 'Enabled' : 'Locked'}
+              </div>
+            </div>
+
+            {!isPremium && (
+              <button 
+                onClick={showRewarded}
+                className="w-full h-12 rounded-2xl bg-gradient-to-r from-primary to-blue-600 text-white font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:scale-[1.02] transition-all"
+              >
+                <Star className="w-4 h-4 fill-white" /> Unlock Pro (Watch Ad)
+              </button>
+            )}
+            
+            {isPremium && (
+              <p className="text-center text-[10px] text-emerald-500 font-bold uppercase tracking-[0.2em] animate-pulse">
+                Thanks for supporting the developer!
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
       {/* Theme Selection */}
       <section className="space-y-4">
         <div className="flex items-center gap-2 px-1">

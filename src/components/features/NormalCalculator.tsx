@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useHistory, useInteractions, InteractionType } from "../../lib/hooks";
+import { useAds } from "../../lib/ads";
 
 export function NormalCalculator() {
   const [display, setDisplay] = useState("0");
   const [expression, setExpression] = useState("");
   const { saveCalculation } = useHistory();
   const { playInteraction } = useInteractions();
+  const { incrementActions } = useAds();
 
   const wrapAction = (fn: () => void, type: InteractionType = 'tap') => {
     return () => {
@@ -38,6 +40,7 @@ export function NormalCalculator() {
       if (resultStr !== "Error") {
         playInteraction('success');
         saveCalculation({ expression: fullExpr, result: resultStr, type: 'normal' });
+        incrementActions(); // Potential ad trigger
       } else {
         playInteraction('error');
       }

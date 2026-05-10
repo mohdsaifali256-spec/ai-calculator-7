@@ -18,10 +18,23 @@ import { BMICalculator } from "./components/features/BMICalculator";
 import { LoanCalculator } from "./components/features/LoanCalculator";
 import { getSavedTheme, applyTheme, THEMES } from "./lib/theme";
 import { CreatorTag } from "./components/ui/CreatorTag";
+import { AdProvider, useAds } from "./lib/ads";
+import { SplashAd } from "./components/ads/SplashAd";
+
 export default function App() {
+  return (
+    <AdProvider>
+      <AppContent />
+    </AdProvider>
+  );
+}
+
+function AppContent() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
   const [navStack, setNavStack] = useState<NavTab[]>(["home"]);
   const [loading, setLoading] = useState(true);
+  const [splashFinished, setSplashFinished] = useState(false);
+  const { incrementActions } = useAds();
 
   useEffect(() => {
     // Initial Theme Load
@@ -41,6 +54,7 @@ export default function App() {
     if (tab === activeTab) return;
     setActiveTab(tab);
     setNavStack(prev => [...prev, tab]);
+    incrementActions(); // Show interstitial occasionally
   };
 
   const goBack = () => {
@@ -99,8 +113,11 @@ export default function App() {
   };
 
   return (
-    <Shell activeTab={activeTab} onTabChange={navigateTo} onBack={goBack}>
-      {renderContent()}
-    </Shell>
+    <>
+      {!splashFinished && <SplashAd onComplete={() => setSplashFinished(true)} />}
+      <Shell activeTab={activeTab} onTabChange={navigateTo} onBack={goBack}>
+        {renderContent()}
+      </Shell>
+    </>
   );
 }
