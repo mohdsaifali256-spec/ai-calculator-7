@@ -1,52 +1,24 @@
 export const THEMES = {
   blue: {
-    primary: '#2563eb',
-    bg: '#0f172a',
-    card: '#1e293b',
-    text: '#f8fafc',
-    header: '#1e293b'
-  },
-  black: {
-    primary: '#ffffff',
-    bg: '#000000',
-    card: '#111111',
+    primary: '#ff007f', // Neon Pink (Default)
+    bg: '#050505',
+    card: '#0c0c0c',
     text: '#ffffff',
     header: '#000000'
   },
-  red: {
-    primary: '#ef4444',
-    bg: '#450a0a',
-    card: '#7f1d1d',
-    text: '#fee2e2',
-    header: '#7f1d1d'
-  },
-  green: {
-    primary: '#22c55e',
-    bg: '#052e16',
-    card: '#064e3b',
-    text: '#dcfce7',
-    header: '#064e3b'
-  },
-  purple: {
-    primary: '#a855f7',
-    bg: '#2e1065',
-    card: '#4c1d95',
-    text: '#f3e8ff',
-    header: '#4c1d95'
-  },
-  orange: {
-    primary: '#f97316',
-    bg: '#431407',
-    card: '#7c2d12',
-    text: '#ffedd5',
-    header: '#7c2d12'
+  black: {
+    primary: '#ff007f',
+    bg: '#000000',
+    card: '#0c0c0c',
+    text: '#ffffff',
+    header: '#000000'
   },
   pink: {
-    primary: '#ec4899',
-    bg: '#500724',
-    card: '#831843',
-    text: '#fce7f3',
-    header: '#831843'
+    primary: '#ff007f',
+    bg: '#050505',
+    card: '#111111',
+    text: '#ffffff',
+    header: '#000000'
   },
   yellow: {
     primary: '#eab308',

@@ -21,10 +21,13 @@ import { CreatorTag } from "./components/ui/CreatorTag";
 import { AdProvider, useAds } from "./lib/ads";
 import { SplashAd } from "./components/ads/SplashAd";
 
+import { AIChat } from "./components/features/AIChat";
+
 export default function App() {
   return (
     <AdProvider>
       <AppContent />
+      <AIChat />
     </AdProvider>
   );
 }

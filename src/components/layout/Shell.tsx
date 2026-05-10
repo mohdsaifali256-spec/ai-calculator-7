@@ -48,34 +48,43 @@ export function Shell({ children, activeTab, onTabChange, onBack }: ShellProps) 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-main">
       {/* Header */}
-      <header className="px-4 sm:px-5 h-14 sm:h-16 flex items-center justify-between border-b border-white/5 bg-header/80 backdrop-blur-xl z-50 safe-pt">
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="px-4 sm:px-5 h-16 flex items-center justify-between border-b border-pink-500/10 bg-black/60 backdrop-blur-2xl z-50 safe-pt relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,0,127,0.1)_0%,transparent_70%)]" />
+        <div className="flex items-center gap-2 sm:gap-3 relative z-10">
           {!isHome && onBack ? (
             <button 
               onClick={handleBack}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 active:scale-95 transition-all group"
+              className="w-10 h-10 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-pink-500/10 hover:border-pink-500/30 active:scale-95 transition-all group"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 group-hover:text-white" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-slate-400 group-hover:text-pink-500 transition-colors" />
             </button>
           ) : (
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center shadow-lg overflow-hidden border border-white/10 group">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-pink-500/20 to-transparent flex items-center justify-center shadow-lg overflow-hidden border border-pink-500/20 group">
               <img 
                 src="https://img.icons8.com/isometric/512/calculator.png" 
                 alt="Logo" 
-                className="w-7 h-7 sm:w-8 sm:h-8 group-hover:scale-110 transition-transform"
+                className="w-8 h-8 group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_rgba(255,0,127,0.5)]"
                 referrerPolicy="no-referrer"
               />
             </div>
           )}
           <div>
-            <h1 className="text-base sm:text-lg font-bold tracking-tight leading-none text-white capitalize">
-              {activeTab === 'home' ? T('app_name' as any) : (T(activeTab as any) || activeTab.replace('-', ' '))}
+            <h1 className="text-sm sm:text-base font-black tracking-[0.2em] leading-none text-white uppercase italic">
+              {activeTab === 'home' ? (
+                <>NEON<span className="text-pink-500 not-italic">CALC</span></>
+              ) : (
+                <span className="text-pink-500">{T(activeTab as any) || activeTab.replace('-', ' ')}</span>
+              )}
             </h1>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-          <span className="text-[9px] sm:text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Offline</span>
+        <div className="flex items-center gap-3 relative z-10">
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse shadow-[0_0_10px_rgba(255,0,127,1)]" />
+              <span className="text-[8px] font-black text-pink-500 uppercase tracking-[0.3em]">Neural Link</span>
+            </div>
+          </div>
         </div>
       </header>
 
