@@ -1,4 +1,5 @@
 import { Instagram } from "lucide-react";
+import { motion } from "motion/react";
 import { useInteractions } from "../../lib/hooks";
 
 interface CreatorTagProps {
@@ -23,7 +24,12 @@ export function CreatorTag({ className }: CreatorTagProps) {
       onClick={handleClick}
       className={`creator-tag flex items-center gap-2 transition-all hover:scale-105 hover:shadow-[0_0_15px_#00f0ff,0_0_35px_#8a2eff] group ${className}`}
     >
-      <Instagram className="w-4 h-4 text-[#8a2eff] group-hover:text-white transition-colors" />
+      <motion.div
+        animate={{ rotate: [0, 10, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+      >
+        <Instagram className="w-4 h-4 text-[#8a2eff] group-hover:text-[#00f0ff] transition-colors drop-shadow-[0_0_5px_#8a2eff]" />
+      </motion.div>
       <span>@saif_ali_official_07</span>
     </a>
   );

@@ -12,6 +12,7 @@ import { cn } from "../../lib/utils";
 import { useInteractions, useTranslation } from "../../lib/hooks";
 import { TRANSLATIONS } from "../../lib/i18n";
 import { CreatorTag } from "../ui/CreatorTag";
+import { ExternalAdScript } from "../ads/ExternalAdScript";
 
 interface ShellProps {
   children: ReactNode;
@@ -80,6 +81,10 @@ export function Shell({ children, activeTab, onTabChange, onBack }: ShellProps) 
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto no-scrollbar pb-28 md:pb-32">
+        <ExternalAdScript 
+          src="https://pl29412593.profitablecpmratenetwork.com/38/9e/1b/389e1b45f4612cdaed0d02314f8f06c4.js" 
+          className="m-4 rounded-2xl border border-white/10"
+        />
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -98,6 +103,11 @@ export function Shell({ children, activeTab, onTabChange, onBack }: ShellProps) 
             )}
           </motion.div>
         </AnimatePresence>
+        
+        <ExternalAdScript 
+          src="https://pl29412594.profitablecpmratenetwork.com/cd/34/5c/cd345c8f39b22e0ea471140cfc7d230e.js" 
+          className="m-4 rounded-2xl border border-white/10"
+        />
       </main>
 
       {/* Bottom Navigation */}

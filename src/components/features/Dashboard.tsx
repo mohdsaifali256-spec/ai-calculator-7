@@ -98,6 +98,23 @@ export function Dashboard({ onSelect }: DashboardProps) {
         />
       </div>
 
+      <div className="bg-bg-card rounded-[32px] p-6 border border-white/5 flex items-center justify-between group hover:border-primary/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all cursor-pointer relative overflow-hidden"
+        onClick={() => window.open('https://www.profitablecpmratenetwork.com/svysm88h?key=765e44bff64a86610f2cd689d0d942c8', '_blank')}
+      >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-2xl group-hover:bg-primary/10 transition-colors" />
+        
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all">
+            <Percent className="w-6 h-6" />
+          </div>
+          <div>
+            <h4 className="font-bold text-white text-sm group-hover:text-primary transition-colors">Daily Bonus Reward</h4>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Tap to unlock special gifts</p>
+          </div>
+        </div>
+        <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-primary group-hover:translate-x-1 transition-all relative z-10" />
+      </div>
+
       <div className="flex justify-center pt-8 pb-4">
         <CreatorTag className="!mt-0 !scale-90" />
       </div>

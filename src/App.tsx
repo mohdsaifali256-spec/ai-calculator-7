@@ -18,7 +18,6 @@ import { BMICalculator } from "./components/features/BMICalculator";
 import { LoanCalculator } from "./components/features/LoanCalculator";
 import { getSavedTheme, applyTheme, THEMES } from "./lib/theme";
 import { CreatorTag } from "./components/ui/CreatorTag";
-
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>("home");
   const [navStack, setNavStack] = useState<NavTab[]>(["home"]);
