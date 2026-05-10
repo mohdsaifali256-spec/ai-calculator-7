@@ -15,10 +15,54 @@
 }
 
 body {
-  @apply antialiased transition-colors duration-500 overflow-x-hidden;
+  @apply antialiased transition-colors duration-500 overflow-x-hidden w-full min-h-screen relative;
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
+  touch-action: manipulation;
+}
+
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.safe-pb {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-pt {
+  padding-top: env(safe-area-inset-top);
+}
+
+@keyframes glowPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+@keyframes floatTag {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+.creator-tag {
+  @apply relative mt-6 px-6 py-2.5 rounded-full backdrop-blur-md border border-white/10 shadow-2xl;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 0 10px rgba(0, 240, 255, 0.3),
+    0 0 20px rgba(138, 46, 255, 0.2),
+    0 0 40px rgba(255, 123, 0, 0.1);
+  animation: glowPulse 2s infinite ease-in-out, floatTag 4s ease-in-out infinite;
+}
+
+.creator-tag span {
+  @apply text-base font-bold tracking-wider;
+  background: linear-gradient(90deg, #00f0ff, #8a2eff, #ff7b00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
 .bg-main { background-color: var(--color-bg); }

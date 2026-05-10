@@ -63,30 +63,30 @@ export function GSTCalculator() {
 
   return (
     <div className="space-y-8 animate-fade-in pb-10">
-      <div className="bg-bg-card rounded-[32px] p-8 border border-white/5 relative overflow-hidden shadow-2xl">
+      <div className="bg-bg-card rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 border border-white/5 relative overflow-hidden shadow-2xl">
         <div className="relative z-10">
-          <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold mb-1">{T('total_bill')}</p>
-          <p className="text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">{formatCurrency(results.totalAmount)}</p>
+          <p className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold mb-1">{T('total_bill')}</p>
+          <p className="text-3xl sm:text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">{formatCurrency(results.totalAmount)}</p>
           
-          <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/5 pt-6">
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-4 border-t border-white/5 pt-5 sm:pt-6">
             <div className="space-y-1">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{T('net_amount')}</p>
-              <p className="text-md font-mono font-bold text-slate-200">{formatCurrency(results.netAmount)}</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-bold">{T('net_amount')}</p>
+              <p className="text-sm sm:text-md font-mono font-bold text-slate-200">{formatCurrency(results.netAmount)}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">{T('tax')} ({gstRate}%)</p>
-              <p className="text-md font-mono font-bold text-primary">{formatCurrency(results.gstAmount)}</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-bold">{T('tax')} ({gstRate}%)</p>
+              <p className="text-sm sm:text-md font-mono font-bold text-primary">{formatCurrency(results.gstAmount)}</p>
             </div>
           </div>
         </div>
-        <ReceiptIndianRupee className="absolute top-1/2 right-4 -translate-y-1/2 w-32 h-32 text-primary/5 -rotate-12" />
+        <ReceiptIndianRupee className="absolute top-1/2 right-2 w-24 h-24 sm:right-4 sm:w-32 sm:h-32 text-primary/5 -rotate-12" />
       </div>
 
-      <div className="bg-bg-card rounded-[32px] p-6 space-y-8 border border-white/5">
-        <div className="space-y-3">
-          <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1">{T('amount_to_calc')}</label>
+      <div className="bg-bg-card rounded-[28px] sm:rounded-[32px] p-5 sm:p-6 space-y-6 sm:space-y-8 border border-white/5">
+        <div className="space-y-2 sm:space-y-3">
+          <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1">{T('amount_to_calc')}</label>
           <div className="relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold">₹</div>
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold text-sm sm:text-base">₹</div>
             <input 
               type="number" 
               value={amount} 
@@ -94,22 +94,22 @@ export function GSTCalculator() {
                 playInteraction();
                 setAmount(Number(e.target.value));
               }}
-              className="w-full bg-zinc-950 border border-white/5 p-4 pl-10 rounded-2xl outline-none focus:border-primary transition-all font-mono text-xl text-white"
+              className="w-full bg-zinc-950 border border-white/5 p-3.5 sm:p-4 pl-10 rounded-xl sm:rounded-2xl outline-none focus:border-primary transition-all font-mono text-lg sm:text-xl text-white"
             />
           </div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           <div className="flex justify-between items-center px-1">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{T('rate')} (%)</label>
-            <span className="text-primary font-mono font-bold">{gstRate}%</span>
+            <label className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-500">{T('rate')} (%)</label>
+            <span className="text-primary font-mono font-bold text-sm">{gstRate}%</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 sm:gap-2">
             {rates.map(r => (
               <button 
                 key={r}
                 onClick={() => handleRateChange(r)}
-                className={`flex-1 py-3 rounded-xl font-bold transition-all border ${gstRate === r ? 'bg-primary text-white border-primary' : 'bg-zinc-950 text-slate-500 border-white/5 hover:border-primary/20'}`}
+                className={`flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all border ${gstRate === r ? 'bg-primary text-white border-primary' : 'bg-zinc-950 text-slate-500 border-white/5 hover:border-primary/20'}`}
               >
                 {r}%
               </button>
@@ -117,16 +117,16 @@ export function GSTCalculator() {
           </div>
         </div>
 
-        <div className="flex p-1 bg-zinc-950 rounded-2xl border border-white/5">
+        <div className="flex p-1 bg-zinc-950 rounded-xl sm:rounded-2xl border border-white/5">
           <button 
             onClick={() => { playInteraction(); setIsInclusive(false); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition-all ${!isInclusive ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] uppercase tracking-widest font-bold transition-all ${!isInclusive ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500'}`}
           >
             {T('exclusive')}
           </button>
           <button 
             onClick={() => { playInteraction(); setIsInclusive(true); }}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] uppercase tracking-widest font-bold transition-all ${isInclusive ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500'}`}
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-[9px] sm:text-[10px] uppercase tracking-widest font-bold transition-all ${isInclusive ? 'bg-white/10 text-white shadow-lg' : 'text-slate-500'}`}
           >
             {T('inclusive')}
           </button>

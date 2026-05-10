@@ -58,9 +58,23 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-[#0A0B0E] flex flex-col items-center justify-center">
-        <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
-        <p className="text-blue-500 font-bold tracking-[0.3em] text-[10px] uppercase animate-pulse">SmartAdvance</p>
+      <div className="fixed inset-0 bg-[#0A0B0E] flex flex-col items-center justify-center p-6 text-center">
+        <div className="relative mb-6">
+          <div className="absolute inset-0 bg-blue-600/10 blur-3xl rounded-full animate-pulse" />
+          <img 
+            src="https://img.icons8.com/isometric/512/calculator.png" 
+            alt="Logo" 
+            className="w-20 h-20 sm:w-24 sm:h-24 relative z-10 animate-bounce transition-transform"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+        <div className="w-10 h-10 border-[3px] border-blue-600/20 border-t-blue-600 rounded-full animate-spin mb-6" />
+        <p className="text-blue-500 font-bold tracking-[0.3em] text-[8px] sm:text-[10px] uppercase animate-pulse">All Tool Calculator</p>
+        <p className="text-slate-600 text-[7px] mt-2 uppercase tracking-widest font-medium">Powering your daily calculations</p>
+        
+        <div className="creator-tag">
+          <span>@saif_ali_official_07</span>
+        </div>
       </div>
     );
   }

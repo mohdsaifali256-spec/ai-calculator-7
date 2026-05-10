@@ -26,7 +26,7 @@ export function AgeCalculator() {
   const handleShare = () => {
     playInteraction('tap');
     if (!results || results === "future") return;
-    const text = `🎂 My Age Calculation\nYears: ${results.years}\nMonths: ${results.months}\nDays: ${results.days}\nCalculated with SmartAdvance`;
+    const text = `🎂 My Age Calculation\nYears: ${results.years}\nMonths: ${results.months}\nDays: ${results.days}\nCalculated with All Tool Calculator`;
     if (navigator.share) {
       navigator.share({ title: 'Age Result', text });
     } else {

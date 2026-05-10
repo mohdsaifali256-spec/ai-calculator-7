@@ -80,23 +80,23 @@ export function NormalCalculator() {
 
   return (
     <div className="flex flex-col h-full space-y-6 pt-4 animate-fade-in">
-      <div className="bg-bg-card rounded-[40px] p-8 border border-white/5 flex flex-col items-end justify-center h-48 relative overflow-hidden shadow-2xl">
+      <div className="bg-bg-card rounded-[32px] sm:rounded-[40px] p-6 sm:p-8 border border-white/5 flex flex-col items-end justify-center h-40 sm:h-48 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl" />
-        <p className="text-slate-500 font-mono text-sm h-6 overflow-hidden text-right w-full">{expression}</p>
-        <p className="text-5xl font-mono font-bold text-white break-all text-right mt-2">{display}</p>
+        <p className="text-slate-500 font-mono text-xs sm:text-sm h-6 overflow-hidden text-right w-full">{expression}</p>
+        <p className="text-4xl sm:text-5xl font-mono font-bold text-white break-all text-right mt-2">{display}</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 pb-4">
+      <div className="grid grid-cols-4 gap-3 sm:gap-4 pb-4">
         {buttons.map((btn, idx) => (
           <button
             key={`${btn.label}-${idx}`}
             onClick={btn.action}
             className={`
-              h-20 rounded-3xl text-xl font-bold transition-all active:scale-95 flex items-center justify-center
+              h-16 sm:h-20 rounded-2xl sm:rounded-3xl text-lg sm:text-xl font-bold transition-all active:scale-95 flex items-center justify-center
               ${btn.span === 2 ? "col-span-2" : ""}
-              ${btn.type === 'equal' ? "row-span-2 h-[176px] neon-blue" : ""}
-              ${btn.type === 'op' ? "bg-white/10 text-primary" : ""}
-              ${btn.type === 'spec' ? "bg-white/5 text-red-500" : ""}
+              ${btn.type === 'equal' ? "row-span-2 h-[136px] sm:h-[176px] neon-blue" : ""}
+              ${btn.type === 'op' ? "bg-white/10 text-primary border border-primary/20" : ""}
+              ${btn.type === 'spec' ? "bg-white/5 text-red-500 border border-red-500/10" : ""}
               ${!btn.type ? "bg-bg-card text-white hover:bg-white/5 border border-white/5" : ""}
             `}
           >

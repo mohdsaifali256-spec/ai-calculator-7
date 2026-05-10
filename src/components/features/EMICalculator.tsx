@@ -32,27 +32,27 @@ export function EMICalculator() {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in pb-10">
-      <div className="bg-bg-card rounded-[32px] p-8 border border-white/5 relative overflow-hidden shadow-2xl">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in pb-10">
+      <div className="bg-bg-card rounded-[28px] sm:rounded-[32px] p-6 sm:p-8 border border-white/5 relative overflow-hidden shadow-2xl">
         <div className="relative z-10">
-          <p className="text-slate-400 text-xs uppercase tracking-[0.2em] font-bold mb-1">Monthly Installment</p>
-          <p className="text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">{formatCurrency(results.emi)}</p>
+          <p className="text-slate-400 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold mb-1">Monthly Installment</p>
+          <p className="text-3xl sm:text-5xl font-mono font-bold text-primary drop-shadow-[0_0_15px_rgba(37,99,235,0.3)]">{formatCurrency(results.emi)}</p>
           
-          <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/5 pt-6">
+          <div className="mt-6 sm:mt-8 grid grid-cols-2 gap-4 sm:gap-6 border-t border-white/5 pt-5 sm:pt-6">
             <div className="space-y-1">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Interest</p>
-              <p className="text-lg font-mono font-bold text-slate-200">{formatCurrency(results.totalInterest)}</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Interest</p>
+              <p className="text-sm sm:text-lg font-mono font-bold text-slate-200">{formatCurrency(results.totalInterest)}</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Payable</p>
-              <p className="text-lg font-mono font-bold text-primary">{formatCurrency(results.totalPayment)}</p>
+              <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest font-bold">Total Payable</p>
+              <p className="text-sm sm:text-lg font-mono font-bold text-primary">{formatCurrency(results.totalPayment)}</p>
             </div>
           </div>
         </div>
-        <CreditCard className="absolute top-1/2 right-4 -translate-y-1/2 w-32 h-32 text-primary/5 -rotate-12" />
+        <CreditCard className="absolute top-1/2 right-2 w-24 h-24 sm:right-4 sm:w-32 sm:h-32 text-primary/5 -rotate-12" />
       </div>
 
-      <div className="bg-bg-card rounded-[32px] p-6 space-y-8 border border-white/5 shadow-inner">
+      <div className="bg-bg-card rounded-[28px] sm:rounded-[32px] p-5 sm:p-6 space-y-6 sm:space-y-8 border border-white/5">
         <SliderInput 
           label="Loan Amount (₹)" 
           value={loanAmount} 

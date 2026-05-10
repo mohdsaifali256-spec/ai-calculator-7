@@ -54,22 +54,22 @@ export function Dashboard({ onSelect }: DashboardProps) {
         <p className="text-slate-500 text-xs font-bold uppercase tracking-widest px-1">Fast. Reliable. Offline.</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         {TOOLS.map((tool) => (
           <button
             key={tool.id}
             onClick={() => handleSelect(tool.id)}
-            className="group relative bg-bg-card border border-white/5 p-5 rounded-[32px] text-left transition-all hover:border-primary/20 hover:scale-[1.02] active:scale-[0.98] shadow-xl overflow-hidden"
+            className="group relative bg-bg-card border border-white/5 p-4 sm:p-5 rounded-[24px] sm:rounded-[32px] text-left transition-all hover:border-primary/20 active:scale-[0.98] shadow-xl overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-125 duration-500" />
+            <div className="absolute top-0 right-0 w-20 h-20 sm:w-24 sm:h-24 bg-white/5 rounded-full -mr-8 -mt-8 transition-transform group-hover:scale-125 duration-500" />
             
-            <div className={`w-10 h-10 rounded-2xl ${tool.color} flex items-center justify-center mb-4 transition-transform group-hover:rotate-12 duration-300 shadow-lg`}>
-              <tool.icon className="w-5 h-5 text-white" />
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl ${tool.color} flex items-center justify-center mb-3 sm:mb-4 transition-transform group-hover:rotate-12 duration-300 shadow-lg`}>
+              <tool.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             
             <div>
-              <h3 className="font-bold text-white text-md leading-tight group-hover:text-primary transition-colors">{T(tool.nameKey)}</h3>
-              <p className="text-[9px] text-slate-500 uppercase tracking-widest mt-1 font-bold">{T(tool.descKey)}</p>
+              <h3 className="font-bold text-white text-sm sm:text-md leading-tight group-hover:text-primary transition-colors">{T(tool.nameKey)}</h3>
+              <p className="text-[8px] sm:text-[9px] text-slate-500 uppercase tracking-widest mt-1 font-bold line-clamp-1">{T(tool.descKey)}</p>
             </div>
 
             <div className="absolute bottom-5 right-5 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 duration-300">
@@ -79,17 +79,28 @@ export function Dashboard({ onSelect }: DashboardProps) {
         ))}
       </div>
 
-      <div className="bg-gradient-to-br from-primary/10 to-transparent p-8 rounded-[40px] border border-primary/20 relative overflow-hidden group">
-        <div className="relative z-10 space-y-2">
-          <h3 className="text-xl font-bold text-white">SmartAdvance Pro</h3>
-          <p className="text-slate-400 text-sm max-w-[200px]">{T('business_utility')}</p>
-          <div className="pt-4">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] bg-primary/20 text-primary px-3 py-1 rounded-full">
+      <div className="bg-gradient-to-br from-primary/10 to-transparent p-6 sm:p-8 rounded-[32px] sm:rounded-[40px] border border-primary/20 relative overflow-hidden group">
+        <div className="relative z-10 space-y-1 sm:space-y-2">
+          <h3 className="text-lg sm:text-xl font-bold text-white max-w-[140px] sm:max-w-none">{T('app_name' as any)} Pro</h3>
+          <p className="text-slate-400 text-xs sm:text-sm max-w-[140px] sm:max-w-[200px]">{T('business_utility')}</p>
+          <div className="pt-2 sm:pt-4">
+            <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] bg-primary/20 text-primary px-3 py-1 rounded-full">
               {T('stable')} v2.0
             </span>
           </div>
         </div>
-        <Calculator className="absolute top-1/2 right-4 -translate-y-1/2 w-40 h-40 text-primary/5 -rotate-12 group-hover:scale-110 group-hover:rotate-0 transition-transform duration-700" />
+        <img 
+          src="https://img.icons8.com/isometric/512/calculator.png" 
+          alt="Logo Mascot"
+          className="absolute top-1/2 -right-4 sm:right-4 -translate-y-1/2 w-28 h-28 sm:w-32 sm:h-32 opacity-70 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 pointer-events-none" 
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
+      <div className="flex justify-center pt-8 pb-4">
+        <div className="creator-tag !mt-0 !scale-90">
+          <span>@saif_ali_official_07</span>
+        </div>
       </div>
     </div>
   );

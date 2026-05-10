@@ -87,19 +87,19 @@ export function ScientificCalculator() {
 
   return (
     <div className="flex flex-col h-full space-y-4 animate-fade-in pt-4">
-      <div className="bg-bg-card rounded-[32px] p-6 border border-white/5 flex flex-col items-end justify-center min-h-[120px] relative overflow-hidden shadow-xl">
-        <FlaskConical className="absolute top-2 left-2 w-8 h-8 opacity-5 text-primary" />
-        <p className="text-slate-500 font-mono text-xs h-4 overflow-hidden text-right w-full">{expression}</p>
-        <p className="text-4xl font-mono font-bold text-white break-all text-right mt-1">{display}</p>
+      <div className="bg-bg-card rounded-[24px] sm:rounded-[32px] p-5 sm:p-6 border border-white/5 flex flex-col items-end justify-center min-h-[100px] sm:min-h-[120px] relative overflow-hidden shadow-xl">
+        <FlaskConical className="absolute top-2 left-2 w-6 h-6 sm:w-8 sm:h-8 opacity-5 text-primary" />
+        <p className="text-slate-500 font-mono text-[10px] sm:text-xs h-4 overflow-hidden text-right w-full">{expression}</p>
+        <p className="text-3xl sm:text-4xl font-mono font-bold text-white break-all text-right mt-1">{display}</p>
       </div>
 
-      <div className="grid grid-cols-4 gap-2 pb-10">
+      <div className="grid grid-cols-4 gap-2 pb-6 sm:pb-10">
         {buttons.map((btn, idx) => (
           <button
             key={`${btn.label}-${idx}`}
             onClick={btn.action}
             className={`
-              h-14 rounded-2xl text-sm font-bold transition-all active:scale-95 flex items-center justify-center
+              h-12 sm:h-14 rounded-xl sm:rounded-2xl text-[12px] sm:text-sm font-bold transition-all active:scale-95 flex items-center justify-center
               ${btn.span === 2 ? "col-span-2" : ""}
               ${btn.type === 'equal' ? "bg-primary text-white neon-blue" : ""}
               ${btn.type === 'op' ? "bg-white/10 text-primary" : ""}

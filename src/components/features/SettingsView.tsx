@@ -204,9 +204,12 @@ export function SettingsView() {
         </Button>
       </section>
 
-      <div className="text-center py-8 opacity-20">
-        <p className="text-[10px] uppercase tracking-[0.5em] font-medium">SmartAdvance v2.0.0 (Premium)</p>
+      <div className="text-center py-8 opacity-20 flex flex-col items-center">
+        <p className="text-[10px] uppercase tracking-[0.5em] font-medium">{T('app_name' as any)} v2.0.0 (Premium)</p>
         <p className="text-[8px] mt-1">NO FIREBASE • 100% OFFLINE • PRIVACY FIRST</p>
+        <div className="creator-tag mt-8 !opacity-100">
+          <span>@saif_ali_official_07</span>
+        </div>
       </div>
     </div>
   );
